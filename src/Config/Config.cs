@@ -2,11 +2,11 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using Newtonsoft.Json.Linq;
-using pacman.Entities;
-using pacman.Utilities;
+using Pacman.Entities;
+using Pacman.Utilities;
 using SFML.Graphics;
 
-namespace pacman.Config
+namespace Pacman.Config
 {
     public static class Settings
     {
@@ -18,8 +18,8 @@ namespace pacman.Config
         {
             Console.WriteLine("Loading settings");
             var settings = JObject.Parse(new StreamReader("settings.json").ReadToEnd());
-            Resolution.Width = settings["resolution"]["width"].ToObject<double>();
-            Resolution.Height = settings["resolution"]["height"].ToObject<double>();
+            Resolution.Width = settings["resolution"]["width"].ToObject<uint>();
+            Resolution.Height = settings["resolution"]["height"].ToObject<uint>();
             Fullscreen = settings["fullscreen"].ToObject<bool>();
             MaxFPS = settings["maxFPS"].ToObject<double>();
         }
@@ -93,13 +93,35 @@ namespace pacman.Config
         public static void Load()
         {
             Console.WriteLine("Loading map");
+
+            // reading and parsing map file
             string mapName = JObject.Parse(new StreamReader("settings.json").ReadToEnd())["map"].ToString();
             Console.WriteLine(mapName);
             var map = JObject.Parse(new StreamReader("maps/" + mapName + ".pmmap").ReadToEnd());
+
+            // reading and pre-setting map properites
             Width = map["width"].ToObject<int>();
             Height = map["height"].ToObject<int>();
             Tiles = new Tile[Width, Height];
             IntMap = new int[Width, Height];
+
+            // calculating tile size
+            double tileSize = (double)Settings.Resolution.Width / (double)Width;
+            if(tileSize > (double)Settings.Resolution.Height / (Height + 20.0/7.0))
+                tileSize = (double)Settings.Resolution.Height / (Height + 20.0/7.0);
+            
+            Defines.TileSize = tileSize;
+
+            // setting hud margin
+            Defines.HudMargin = (int)(tileSize * 20.0 / 7.0);
+
+            // calculating side margin
+            Defines.SideMargin = (double)(Settings.Resolution.Width - tileSize * Width) / 2;
+
+            // calculating top margin
+            Defines.TopMargin = (double)(Settings.Resolution.Height - Defines.HudMargin - tileSize * Height) / 2;
+
+            // reading tiles
             for(int r = 0; r < Height; r++)
             {
                 for(int c = 0; c < Width; c++)

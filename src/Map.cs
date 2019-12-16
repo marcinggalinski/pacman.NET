@@ -1,9 +1,9 @@
 using System;
-using pacman.Config;
-using pacman.Entities;
+using Pacman.Config;
+using Pacman.Entities;
 using SFML.Graphics;
 
-namespace pacman
+namespace Pacman
 {
     public class Map
     {

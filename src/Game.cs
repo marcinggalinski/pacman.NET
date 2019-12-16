@@ -1,8 +1,10 @@
-using pacman.Config;
-using pacman.Utilities;
-using pacman.Entities;
+using Pacman.Config;
+using Pacman.Utilities;
+using Pacman.Entities;
+using SFML.Graphics;
+using SFML.Window;
 
-namespace pacman
+namespace Pacman
 {
     public static class Game
     {
@@ -11,6 +13,20 @@ namespace pacman
             Settings.Load();
             Textures.Load();
             MapData.Load();
+
+            var window = new RenderWindow(
+                new VideoMode(Settings.Resolution.Width, Settings.Resolution.Height),
+                "Pacman.NET");
+            
+            var map = new Map();
+            while(window.IsOpen)
+            {
+                window.Clear();
+
+                map.Draw(window);
+
+                window.Display();
+            }
         }
     }
 }

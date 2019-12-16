@@ -1,9 +1,9 @@
-namespace pacman.Utilities
+namespace Pacman.Utilities
 {
     public struct Resolution_t
     {
-        public double Width { get; set; }
-        public double Height { get; set; }
+        public uint Width { get; set; }
+        public uint Height { get; set; }
     }
 
     public struct Position_t

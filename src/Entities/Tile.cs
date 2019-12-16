@@ -1,8 +1,9 @@
-using pacman.Config;
-using pacman.Utilities;
+using Pacman.Config;
+using Pacman.Utilities;
 using SFML.Graphics;
+using SFML.System;
 
-namespace pacman.Entities
+namespace Pacman.Entities
 {
     public class Tile
     {
@@ -14,14 +15,24 @@ namespace pacman.Entities
         public bool ContainsGhost { get; private set; }
         private Sprite Sprite { get; set; }
 
-        // ctor
-        public Tile(Position_t position, TileContent content, Texture texture = null)
+        // ctors
+        public Tile(Position_t position, TileContent content)
         {
             Position = position;
             Coords = new Coords_t(Defines.SideMargin + position.Column * Defines.TileSize,
                             Defines.TopMargin + Defines.HudMargin + position.Row * Defines.TileSize);
             Content = content;
-            Sprite = (texture == null ? null : new Sprite(texture));
+            Sprite = null;
+        }
+        public Tile(Position_t position, TileContent content, Texture texture) : this(position, content)
+        {
+            Sprite = new Sprite(texture);
+            Sprite.Scale = new Vector2f(
+                            (float)Defines.TileSize / texture.Size.X,
+                            (float)Defines.TileSize / texture.Size.Y);
+            Sprite.Position = new Vector2f(
+                                (float)Coords.X,
+                                (float)Coords.Y);
         }
 
         // methods
