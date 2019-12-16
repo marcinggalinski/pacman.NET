@@ -15,13 +15,13 @@ namespace pacman.Entities
         private Sprite Sprite { get; set; }
 
         // ctor
-        public Tile(Position_t position, TileContent content, Sprite sprite = null)
+        public Tile(Position_t position, TileContent content, Texture texture = null)
         {
             Position = position;
             Coords = new Coords_t(Defines.SideMargin + position.Column * Defines.TileSize,
                             Defines.TopMargin + Defines.HudMargin + position.Row * Defines.TileSize);
             Content = content;
-            Sprite = sprite;
+            Sprite = (texture == null ? null : new Sprite(texture));
         }
 
         // methods

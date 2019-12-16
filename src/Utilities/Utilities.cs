@@ -1,5 +1,11 @@
 namespace pacman.Utilities
 {
+    public struct Resolution_t
+    {
+        public double Width { get; set; }
+        public double Height { get; set; }
+    }
+
     public struct Position_t
     {
         public int Column { get; set; }
@@ -26,21 +32,21 @@ namespace pacman.Utilities
 
     public enum TileContent
     {
-        none = 0,
-        dot,
-        superDot,
-        wall,
-        ghosthouse,
-        ghosthouseDoor,
-        tunel
+        None = 0,
+        Dot,
+        SuperDot,
+        Wall,
+        Ghosthouse,
+        GhosthouseDoor,
+        Tunel
     }
     public enum Direction
     {
-        none = 0,
-        up,
-        down,
-        left,
-        right,
-        nOfDirections
+        None = 0,
+        Up,
+        Down,
+        Left,
+        Right,
+        NOfDirections
     }
 }
