@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using System.IO;
 using Newtonsoft.Json.Linq;
 using pacman.Entities;
@@ -15,6 +16,7 @@ namespace pacman.Config
 
         public static void Load()
         {
+            Console.WriteLine("Loading settings");
             var settings = JObject.Parse(new StreamReader("settings.json").ReadToEnd());
             Resolution.Width = settings["resolution"]["width"].ToObject<double>();
             Resolution.Height = settings["resolution"]["height"].ToObject<double>();
@@ -43,6 +45,7 @@ namespace pacman.Config
 
         public static void Load()
         {
+            Console.WriteLine("Loading textures");
             Dot = new Texture("textures/dot.png");
             Superdot = new Texture("textures/superdot.png");
             Wall = new Texture("textures/wall.png");
@@ -50,21 +53,25 @@ namespace pacman.Config
             Pacman = new Texture("textures/pacman.png");
 
             // blinky
+            Blinky = new GhostTextures();
             Blinky.Normal = new Texture("textures/blinky/normal.png");
             Blinky.Frightened = new Texture("textures/blinky/frightened.png");
             Blinky.Dead = new Texture("textures/blinky/dead.png");
             // pinky
+            Pinky = new GhostTextures();
             Pinky.Normal = new Texture("textures/pinky/normal.png");
             Pinky.Frightened = new Texture("textures/pinky/frightened.png");
             Pinky.Dead = new Texture("textures/pinky/dead.png");
             // inky
+            Inky = new GhostTextures();
             Inky.Normal = new Texture("textures/inky/normal.png");
             Inky.Frightened = new Texture("textures/inky/frightened.png");
             Inky.Dead = new Texture("textures/inky/dead.png");
-            // blinky
-            Blinky.Normal = new Texture("textures/blinky/normal.png");
-            Blinky.Frightened = new Texture("textures/blinky/frightened.png");
-            Blinky.Dead = new Texture("textures/blinky/dead.png");
+            // clyde
+            Clyde = new GhostTextures();
+            Clyde.Normal = new Texture("textures/clyde/normal.png");
+            Clyde.Frightened = new Texture("textures/clyde/frightened.png");
+            Clyde.Dead = new Texture("textures/clyde/dead.png");
         }
     }
 
@@ -85,6 +92,7 @@ namespace pacman.Config
 
         public static void Load()
         {
+            Console.WriteLine("Loading map");
             string mapName = JObject.Parse(new StreamReader("settings.json").ReadToEnd())["map"].ToString();
             Console.WriteLine(mapName);
             var map = JObject.Parse(new StreamReader("maps/" + mapName + ".pmmap").ReadToEnd());

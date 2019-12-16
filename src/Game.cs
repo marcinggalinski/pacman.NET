@@ -9,6 +9,7 @@ namespace pacman
         public static void Main()
         {
             Settings.Load();
+            Textures.Load();
             MapData.Load();
         }
     }
