@@ -1,5 +1,4 @@
 using System;
-using System.Diagnostics;
 using System.IO;
 using Newtonsoft.Json.Linq;
 using Pacman.Entities;
@@ -12,7 +11,7 @@ namespace Pacman.Config
     {
         public static Resolution_t Resolution;
         public static bool Fullscreen { get; set; }
-        public static double MaxFPS { get; set; }
+        public static float MaxFPS { get; set; }
 
         public static void Load()
         {
@@ -21,7 +20,7 @@ namespace Pacman.Config
             Resolution.Width = settings["resolution"]["width"].ToObject<uint>();
             Resolution.Height = settings["resolution"]["height"].ToObject<uint>();
             Fullscreen = settings["fullscreen"].ToObject<bool>();
-            MaxFPS = settings["maxFPS"].ToObject<double>();
+            MaxFPS = settings["maxFPS"].ToObject<float>();
         }
     }
 
@@ -77,10 +76,16 @@ namespace Pacman.Config
 
     public static class Defines
     {
-        public static double TopMargin { get; set; }
-        public static double SideMargin { get; set; }
-        public static double HudMargin { get; set; }
-        public static double TileSize { get; set; }
+        public static float TopMargin { get; set; }
+        public static float SideMargin { get; set; }
+        public static float HudMargin { get; set; }
+        public static float TileSize { get; set; }
+        public static float BaseSpeed { get; }
+
+        static Defines()
+        {
+            BaseSpeed = 0.2f;
+        }
     }
 
     public static class MapData
@@ -89,6 +94,7 @@ namespace Pacman.Config
         public static int Height { get; set; }
         public static Tile[,] Tiles { get; set; }
         public static int[,] IntMap { get; set; }
+        public static Coords_t Pacman { get; set; }
 
         public static void Load()
         {
@@ -106,9 +112,9 @@ namespace Pacman.Config
             IntMap = new int[Width, Height];
 
             // calculating tile size
-            double tileSize = (double)Settings.Resolution.Width / (double)Width;
-            if(tileSize > (double)Settings.Resolution.Height / (Height + 20.0/7.0))
-                tileSize = (double)Settings.Resolution.Height / (Height + 20.0/7.0);
+            float tileSize = (float)Settings.Resolution.Width / (float)Width;
+            if(tileSize > Settings.Resolution.Height / (Height + 20.0f/7.0f))
+                tileSize = Settings.Resolution.Height / (Height + 20.0f/7.0f);
             
             Defines.TileSize = tileSize;
 
@@ -116,10 +122,15 @@ namespace Pacman.Config
             Defines.HudMargin = (int)(tileSize * 20.0 / 7.0);
 
             // calculating side margin
-            Defines.SideMargin = (double)(Settings.Resolution.Width - tileSize * Width) / 2;
+            Defines.SideMargin = (float)(Settings.Resolution.Width - tileSize * Width) / 2;
 
             // calculating top margin
-            Defines.TopMargin = (double)(Settings.Resolution.Height - Defines.HudMargin - tileSize * Height) / 2;
+            Defines.TopMargin = (float)(Settings.Resolution.Height - Defines.HudMargin - tileSize * Height) / 2;
+
+            // reading actors properties
+            Pacman = new Coords_t(
+                map["pacman"]["x"].ToObject<float>() * Defines.TileSize + Defines.SideMargin,
+                map["pacman"]["y"].ToObject<float>() * Defines.TileSize + Defines.TopMargin + Defines.HudMargin);
 
             // reading tiles
             for(int r = 0; r < Height; r++)

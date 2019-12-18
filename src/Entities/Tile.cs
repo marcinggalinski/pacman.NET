@@ -12,7 +12,7 @@ namespace Pacman.Entities
         public Coords_t Coords { get; set; }
         public TileContent Content { get; set; }
         public bool ContainsPacman { get; private set; }
-        public bool ContainsGhost { get; private set; }
+        public bool ContainsGhost { get; set; }
         private Sprite Sprite { get; set; }
 
         // ctors
@@ -36,6 +36,15 @@ namespace Pacman.Entities
         }
 
         // methods
+        public void SetPacman(bool state)
+        {
+            ContainsPacman = state;
+            if(state && (Content == TileContent.Dot || Content == TileContent.SuperDot))
+            {
+                Content = TileContent.None;
+                Sprite = null;
+            }
+        }
         public void Draw(RenderWindow window)
         {
             if(Sprite != null)
