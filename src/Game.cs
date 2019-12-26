@@ -30,6 +30,13 @@ namespace Pacman
             var dt = new Time();
             while(window.IsOpen)
             {
+                currentTime = clock.ElapsedTime;
+                dt = currentTime - previousTime;
+                if(dt.AsMilliseconds() < 1000.0/Settings.MaxFPS)
+                    continue;
+
+                previousTime = currentTime;
+
                 window.DispatchEvents();
                 window.Clear();
 
@@ -38,14 +45,6 @@ namespace Pacman
                 map.Draw(window);
                 player.Draw(window);
                 
-                currentTime = clock.ElapsedTime;
-                dt = currentTime - previousTime;
-
-                if(dt.AsMilliseconds() < 1000.0/60.0)
-                    continue;
-
-                previousTime = currentTime;
-
                 window.Display();
             }
         }

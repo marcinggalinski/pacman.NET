@@ -53,5 +53,33 @@ namespace Pacman
                 tile.Draw(window);
             }
         }
+        public Position_t? FindTilePosition(Coords_t coords)
+        {
+            // coords of center of an actor
+            var center = coords + new Coords_t(Defines.TileSize / 2);
+
+            for(int c = 0; c < Width; c++)
+            {
+                for(int r = 0; r < Height; r++)
+                {
+                    //coords of top left corner of tile
+                    var corner = new Coords_t(tiles[c, r].Coords.X, tiles[c, r].Coords.Y);
+
+                    if(center.X > corner.X && center.X < corner.X + Defines.TileSize
+                        && center.Y > corner.Y && center.Y < corner.Y + Defines.TileSize)
+                    {
+                        if(tiles[c, r].Content == TileContent.Wall)
+                        {
+                            return null;
+                        }
+                        else
+                        {
+                            return new Position_t(c, r);
+                        }
+                    }
+                }
+            }
+            return null;
+        }
     }
 }

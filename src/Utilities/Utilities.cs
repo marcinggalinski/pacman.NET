@@ -29,6 +29,13 @@ namespace Pacman.Utilities
         {
             return new Position_t(lhv.Column + rhv.Column, lhv.Row + rhv.Row);
         }
+        public static Position_t operator+(Position_t? lhv, Position_t rhv)
+        {
+            if(lhv == null)
+                return new Position_t(rhv.Column, rhv.Row);
+            else
+                return new Position_t(lhv.Value.Column + rhv.Column, lhv.Value.Row + rhv.Row);
+        }
         public static Position_t operator%(Position_t lhv, Vector2i rhv)
         {
             return new Position_t(lhv.Column % rhv.X, lhv.Row % rhv.Y);
@@ -66,6 +73,15 @@ namespace Pacman.Utilities
             Y = coords.Y;
         }
 
+        public static bool operator==(Coords_t lhv, Coords_t rhv)
+        {
+            return lhv.X == rhv.X && lhv.Y == rhv.Y;
+        }
+        public static bool operator!=(Coords_t lhv, Coords_t rhv)
+        {
+            return lhv.X != rhv.X || lhv.Y != rhv.Y;
+        }
+        
         public static Coords_t operator+(Coords_t lhv, Coords_t rhv)
         {
             return new Coords_t(lhv.X + rhv.X, lhv.Y + rhv.Y);
@@ -95,6 +111,18 @@ namespace Pacman.Utilities
         public override string ToString()
         {
             return $"({X} {Y})";
+        }
+
+        public override bool Equals(object obj)
+        {
+            return obj is Coords_t t &&
+                   X == t.X &&
+                   Y == t.Y;
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(X, Y);
         }
     }
 

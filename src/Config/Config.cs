@@ -80,12 +80,7 @@ namespace Pacman.Config
         public static float SideMargin { get; set; }
         public static float HudMargin { get; set; }
         public static float TileSize { get; set; }
-        public static float BaseSpeed { get; }
-
-        static Defines()
-        {
-            BaseSpeed = 0.2f;
-        }
+        public static float BaseSpeed { get; set; }
     }
 
     public static class MapData
@@ -108,6 +103,7 @@ namespace Pacman.Config
             // reading and pre-setting map properites
             Width = map["width"].ToObject<int>();
             Height = map["height"].ToObject<int>();
+            Defines.BaseSpeed = map["baseSpeed"].ToObject<float>();
             Tiles = new Tile[Width, Height];
             IntMap = new int[Width, Height];
 

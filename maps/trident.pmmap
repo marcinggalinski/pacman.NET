@@ -37,7 +37,7 @@
             "y" : 14
         }
     },
-    "map" : [
+    "tiles" : [
         "#t#ooooooooo#tt#ooooooooo#t#",
         "#t#ooooooooo#tt#ooooooooo#t#",
         "#t#ooooooooo#tt#ooooooooo#t#",
@@ -71,6 +71,7 @@
         "#t#ooooooooo#tt#ooooooooo#t#",    //30
         "#t#ooooooooo#tt#ooooooooo#t#"
     ],
+    "baseSpeed" : 3,
     "levels" : [
         {
             "lastLevel" : 1,
