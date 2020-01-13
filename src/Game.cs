@@ -21,6 +21,10 @@ namespace Pacman
             
             var map = new Map();
             var player = new Player(map);
+            var blinky = new Blinky(map, player);
+            var pinky = new Pinky(map, player);
+            var inky = new Inky(map, player, blinky);
+            var clyde = new Clyde(map, player);
 
             Handlers.SetupGameEvents(window, player);
 
@@ -41,9 +45,17 @@ namespace Pacman
                 window.Clear();
 
                 player.Move();
+                blinky.Move();
+                pinky.Move();
+                inky.Move();
+                clyde.Move();
 
                 map.Draw(window);
                 player.Draw(window);
+                blinky.Draw(window);
+                pinky.Draw(window);
+                inky.Draw(window);
+                clyde.Draw(window);
                 
                 window.Display();
             }

@@ -11,8 +11,8 @@ namespace Pacman.Entities
         public Position_t Position { get; set; }
         public Coords_t Coords { get; set; }
         public TileContent Content { get; set; }
-        public bool ContainsPacman { get; private set; }
-        public bool ContainsGhost { get; set; }
+        public bool ContainsPacman{ get; private set; }
+        public int GhostsContaining { get; set; }
         private Sprite Sprite { get; set; }
 
         // ctors
@@ -44,6 +44,10 @@ namespace Pacman.Entities
                 Content = TileContent.None;
                 Sprite = null;
             }
+        }
+        public bool IsWall()
+        {
+            return Content == TileContent.Wall || Content == TileContent.GhosthouseDoor;
         }
         public void Draw(RenderWindow window)
         {

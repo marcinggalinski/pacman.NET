@@ -5,5 +5,5 @@
     },
     "fullscreen" : false,
     "maxFPS" : 60,
-    "map" : "trident"
+    "map" : "default"
 }

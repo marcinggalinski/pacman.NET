@@ -85,11 +85,30 @@ namespace Pacman.Config
 
     public static class MapData
     {
+        public class ActorData
+        {
+            public Coords_t SpawnCoords { get; set; }
+            public Position_t RespawnPosition { get; set; }
+        }
+
         public static int Width { get; set; }
         public static int Height { get; set; }
         public static Tile[,] Tiles { get; set; }
         public static int[,] IntMap { get; set; }
-        public static Coords_t Pacman { get; set; }
+        public static ActorData Pacman { get; set; }
+        public static ActorData Blinky { get; set; }
+        public static ActorData Inky { get; set; }
+        public static ActorData Pinky { get; set; }
+        public static ActorData Clyde { get; set; }
+
+        static MapData()
+        {
+            Pacman = new ActorData();
+            Blinky = new ActorData();
+            Pinky = new ActorData();
+            Inky = new ActorData();
+            Clyde = new ActorData();
+        }
 
         public static void Load()
         {
@@ -124,9 +143,42 @@ namespace Pacman.Config
             Defines.TopMargin = (float)(Settings.Resolution.Height - Defines.HudMargin - tileSize * Height) / 2;
 
             // reading actors properties
-            Pacman = new Coords_t(
+            // pacman
+            Pacman.SpawnCoords = new Coords_t(
                 map["pacman"]["x"].ToObject<float>() * Defines.TileSize + Defines.SideMargin,
                 map["pacman"]["y"].ToObject<float>() * Defines.TileSize + Defines.TopMargin + Defines.HudMargin);
+
+            // blinky
+            Blinky.SpawnCoords = new Coords_t(
+                map["blinky"]["x"].ToObject<float>() * Defines.TileSize + Defines.SideMargin,
+                map["blinky"]["y"].ToObject<float>() * Defines.TileSize + Defines.TopMargin + Defines.HudMargin);
+            Blinky.RespawnPosition = new Position_t(
+                (int)(map["blinky"]["respawn"]["x"].ToObject<int>() * Defines.TileSize + Defines.SideMargin),
+                (int)(map["blinky"]["respawn"]["y"].ToObject<int>() * Defines.TileSize + Defines.TopMargin + Defines.HudMargin));
+
+            // inky
+            Inky.SpawnCoords = new Coords_t(
+                map["inky"]["x"].ToObject<float>() * Defines.TileSize + Defines.SideMargin,
+                map["inky"]["y"].ToObject<float>() * Defines.TileSize + Defines.TopMargin + Defines.HudMargin);
+            Inky.RespawnPosition = new Position_t(
+                (int)(map["inky"]["respawn"]["x"].ToObject<int>() * Defines.TileSize + Defines.SideMargin),
+                (int)(map["inky"]["respawn"]["y"].ToObject<int>() * Defines.TileSize + Defines.TopMargin + Defines.HudMargin));
+            
+            // pinky
+            Pinky.SpawnCoords = new Coords_t(
+                map["pinky"]["x"].ToObject<float>() * Defines.TileSize + Defines.SideMargin,
+                map["pinky"]["y"].ToObject<float>() * Defines.TileSize + Defines.TopMargin + Defines.HudMargin);
+            Pinky.RespawnPosition = new Position_t(
+                (int)(map["pinky"]["respawn"]["x"].ToObject<int>() * Defines.TileSize + Defines.SideMargin),
+                (int)(map["pinky"]["respawn"]["y"].ToObject<int>() * Defines.TileSize + Defines.TopMargin + Defines.HudMargin));
+            
+            // clyde
+            Clyde.SpawnCoords = new Coords_t(
+                map["clyde"]["x"].ToObject<float>() * Defines.TileSize + Defines.SideMargin,
+                map["clyde"]["y"].ToObject<float>() * Defines.TileSize + Defines.TopMargin + Defines.HudMargin);
+            Clyde.RespawnPosition = new Position_t(
+                (int)(map["clyde"]["respawn"]["x"].ToObject<int>() * Defines.TileSize + Defines.SideMargin),
+                (int)(map["clyde"]["respawn"]["y"].ToObject<int>() * Defines.TileSize + Defines.TopMargin + Defines.HudMargin));
 
             // reading tiles
             for(int r = 0; r < Height; r++)

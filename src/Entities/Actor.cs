@@ -1,3 +1,4 @@
+using System;
 using Pacman.Config;
 using Pacman.Utilities;
 using SFML.Graphics;
@@ -10,20 +11,22 @@ namespace Pacman.Entities
         public Coords_t Coords { get; set; }
         public Position_t? Position { get; set; }
         public Direction MoveDirection { get; protected set; }
-        public bool HasMoved { get; protected set; }
+        public Direction PlannedTurn { get; protected set; }
         protected Sprite Sprite { get; set; }
         protected Map Map { get; set; }
-        // protected Player player { get; set; }
-        // protected Ghost Blinky { get; set; }
-        // protected Ghost Pinky { get; set; }
-        // protected Ghost Inky { get; set; }
-        // protected Ghost Clyde { get; set; }
+
+        public Actor(Map map, Coords_t coords)
+        {
+            Map = map;
+            Coords = coords;
+        }
 
         // public methods
         public abstract void Move();
         public void Draw(RenderWindow window)
         {
             window.Draw(Sprite);
+            // Console.WriteLine("{0} position {1}", this.GetType(), Position);
         }
 
         // private methods
@@ -31,7 +34,7 @@ namespace Pacman.Entities
         {
             if(Position == null)
                 return false;
-            Tile tile = Map[Position.Value];
+            Tile tile = Map[Position];
             return tile.Position.Column == 0 || tile.Position.Column == Map.Width - 1
                     || tile.Position.Row == 0 || tile.Position.Row == Map.Height - 1;
         }

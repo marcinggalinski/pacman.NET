@@ -25,6 +25,15 @@ namespace Pacman.Utilities
             Row = r;
         }
 
+        public static bool operator==(Position_t lhv, Position_t rhv)
+        {
+            return lhv.Column == rhv.Column && lhv.Row == rhv.Row;
+        }
+        public static bool operator!=(Position_t lhv, Position_t rhv)
+        {
+            return lhv.Column != rhv.Column || lhv.Row != rhv.Row;
+        }
+        
         public static Position_t operator+(Position_t lhv, Position_t rhv)
         {
             return new Position_t(lhv.Column + rhv.Column, lhv.Row + rhv.Row);
@@ -36,6 +45,10 @@ namespace Pacman.Utilities
             else
                 return new Position_t(lhv.Value.Column + rhv.Column, lhv.Value.Row + rhv.Row);
         }
+        public static Position_t operator-(Position_t lhv, Position_t rhv)
+        {
+            return new Position_t(lhv.Column - rhv.Column, lhv.Row - rhv.Row);
+        }
         public static Position_t operator%(Position_t lhv, Vector2i rhv)
         {
             return new Position_t(lhv.Column % rhv.X, lhv.Row % rhv.Y);
@@ -45,10 +58,26 @@ namespace Pacman.Utilities
         {
             return new Position_t((int)v.X, (int)v.Y);
         }
+        public static implicit operator Vector2i(Position_t pos)
+        {
+            return new Vector2i(pos.Column, pos.Row);
+        }
 
         public override string ToString()
         {
             return $"({Column} {Row})";
+        }
+
+        public override bool Equals(object obj)
+        {
+            return obj is Position_t t &&
+                   Column == t.Column &&
+                   Row == t.Row;
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(Column, Row);
         }
     }
 
@@ -126,6 +155,17 @@ namespace Pacman.Utilities
         }
     }
 
+    public struct DotCounter
+    {
+        public int Count { get; private set; }
+
+        public void Restart() => Count = 0;
+        public void Add()
+        {
+            Count = Count + 1;
+        }
+    }
+
     public enum TileContent
     {
         None = 0,
@@ -145,6 +185,14 @@ namespace Pacman.Utilities
         Right,
         NOfDirections
     }
+    public enum GhostMode
+    {
+        Idle = 0,
+        Scatter,
+        Chase,
+        Frightened,
+        Dead
+    }
 
     public static class Directions
     {
@@ -163,5 +211,20 @@ namespace Pacman.Utilities
             : base("Invalid tile position: " + pos) {}
         public InvalidTilePositionException(object pos)
             : base("Invalid position type: " + pos.GetType()) {}
+    }
+
+    public static class Functions
+    {
+        public static int Distance(Position_t p1, Position_t p2)
+        {
+            return (int)Math.Sqrt(Math.Pow(p2.Column - p1.Column, 2) - Math.Pow(p2.Row - p1.Row, 2));
+        }
+        public static double DirDot(Direction dir1, Direction dir2)
+        {
+            var v1 = Directions.Table[(int)dir1];
+            var v2 = Directions.Table[(int)dir2];
+
+            return v1.X * v2.X + v1.Y * v2.Y;
+        }
     }
 }
