@@ -46,7 +46,8 @@ namespace Pacman.Entities
                 case GhostMode.Frightened:
                     if(mode == GhostMode.Idle
                        || mode == GhostMode.Dead
-                       || Map[Position].IsWall())
+                       || Map[Position].Content == TileContent.Ghosthouse
+                       || Map[Position].Content == TileContent.GhosthouseDoor)
                         return;
                     mode = value;
                     Sprite = Sprites.Frightened;
@@ -71,17 +72,14 @@ namespace Pacman.Entities
         protected int[,] ReachableTiles { get; set; }
         protected int[,] Distances { get; set; }
         private bool ChangedTile { get; set; }
-        public bool IsDead { get; set; }
         protected bool WasDead { get; set; }
         protected bool IsOut { get; set; }
-        protected Player Player { get; set; }
         protected static Clock Timer { get; private set; }
 
-        public Ghost(Map map, Player player, GhostTextures textures, ActorData data) : base(map, data.SpawnCoords)
+        public Ghost(Map map, GhostTextures textures, ActorData data) : base(map, data.SpawnCoords)
         {
             ReachableTiles = MapData.IntMap;
             Distances = new int[map.Width, map.Height];
-            Player = player;
 
             Sprites = new GhostSprites();
             Sprites.Normal = new Sprite(textures.Normal);
@@ -98,7 +96,6 @@ namespace Pacman.Entities
                 (float)Defines.TileSize / textures.Dead.Size.Y);
             Sprite = Sprites.Normal;
 
-            IsDead = false;
             WasDead = false;
             IsOut = false;
             Mode = GhostMode.Idle;
@@ -130,7 +127,7 @@ namespace Pacman.Entities
                 if((!Map[Position + dirV].IsWall()
                    || (Map[Position + dirV].Content == TileContent.GhosthouseDoor
                        && (Map[Position].Content == TileContent.Ghosthouse
-                           || IsDead)))
+                           || Mode == GhostMode.Dead)))
                    && ((dirV.X == 0
                         && Coords.X < currentTile.Coords.X + 0.5
                         && Coords.X > currentTile.Coords.X - 0.5)
@@ -169,7 +166,7 @@ namespace Pacman.Entities
         }
         public override void Move()
         {
-            if(Player.Position == null)
+            if(Map.Player.Position == null)
                 return;
             
             if(Mode == GhostMode.Idle)
@@ -196,7 +193,15 @@ namespace Pacman.Entities
                     }
                 }
             }
-            for(var move = Defines.BaseSpeed; move > 0; move--)
+            var speed = Defines.BaseSpeed;
+            if(Mode == GhostMode.Frightened)
+                speed *= Defines.GhostSpeed.Frightened;
+            else if(Map[Position].Content == TileContent.Tunel)
+                speed *= Defines.GhostSpeed.InTunel;
+            else
+                speed *= Defines.GhostSpeed.Normal;
+
+            for(var move = speed; move > 0; move--)
             {
                 // possibly turn
                 PlannedTurn = ChooseDirection();
@@ -301,10 +306,9 @@ namespace Pacman.Entities
                 if(previousTile == currentTile)
                     continue;
                 
-                if(IsDead && Position == RespawnPosition)
+                if(Mode == GhostMode.Dead && Position == RespawnPosition)
                 {
                     Mode = GhostMode.Chase;
-                    IsDead = false;
                     Sprite = Sprites.Normal;
                 }
 
@@ -443,17 +447,17 @@ namespace Pacman.Entities
 
             if(Mode == GhostMode.Frightened)
             {
-                if(Coords.X >= currentTile.Coords.X + 0.5
-                   || Coords.X <= currentTile.Coords.X - 0.5
-                   || Coords.Y >= currentTile.Coords.Y + 0.5
-                   || Coords.Y <= currentTile.Coords.Y - 0.5)
-                    return MoveDirection;
+                // if(Coords.X >= currentTile.Coords.X + 0.5
+                //    || Coords.X <= currentTile.Coords.X - 0.5
+                //    || Coords.Y >= currentTile.Coords.Y + 0.5
+                //    || Coords.Y <= currentTile.Coords.Y - 0.5)
+                //     return MoveDirection;
                 
                 Random rand = new Random();
 
                 while(true)
                 {
-                    int dir = rand.Next(1, (int)Direction.NOfDirections - 1);
+                    int dir = rand.Next(1, (int)Direction.NOfDirections);
                     try
                     {
                         if(Directions.Table[dir] == -Directions.Table[(int)MoveDirection]
@@ -499,9 +503,9 @@ namespace Pacman.Entities
                                % new Position_t(Map.Width, Map.Height);
                     
                     if((!Map[pos].IsWall()
-                       || (Map[pos].Content == TileContent.GhosthouseDoor
-                           && (Map[Position].Content == TileContent.Ghosthouse
-                               || Mode == GhostMode.Dead)))
+                        || (Map[pos].Content == TileContent.GhosthouseDoor
+                            && (Map[Position].Content == TileContent.Ghosthouse
+                                || Mode == GhostMode.Dead)))
                        && Distances[pos.Column, pos.Row] < shortestLen)
                     {
                         shortestLen = Distances[pos.Column, pos.Row];

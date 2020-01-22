@@ -5,7 +5,7 @@ namespace Pacman.Entities
 {
     public class Blinky : Ghost
     {
-        public Blinky(Map map, Player player) : base(map, player, Textures.Blinky, MapData.Blinky)
+        public Blinky(Map map) : base(map, Textures.Blinky, MapData.Blinky)
         {
             Coords = MapData.Blinky.SpawnCoords;
             RespawnPosition = MapData.Blinky.RespawnPosition;
@@ -13,7 +13,7 @@ namespace Pacman.Entities
             IsOut = true;
             Mode = GhostMode.Chase;
         }
-        protected override Position_t GetDestination() => IsDead ? RespawnPosition : Player.Position.Value;
+        protected override Position_t GetDestination() => Mode == GhostMode.Dead ? RespawnPosition : Map.Player.Position.Value;
         protected override bool MayLeave() => WasDead ? Timer.ElapsedTime.AsMilliseconds() > 1000 : true;
     }
 }

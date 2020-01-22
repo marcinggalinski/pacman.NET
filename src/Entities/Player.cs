@@ -11,6 +11,10 @@ namespace Pacman.Entities
         // properties
         public Direction FaceDirection { get; set; }
         public int Score { get; private set; }
+        public bool IsDead { get; private set; }
+        public bool OnDrugs { get; private set; }
+        private Clock Timer { get; set; }
+        private int ghostEatenMultiplier = 0;
 
         public Player(Map map) : base(map, MapData.Pacman.SpawnCoords)
         {
@@ -20,6 +24,9 @@ namespace Pacman.Entities
                 (float)Defines.TileSize / Textures.Pacman.Size.Y);
             Sprite.Position = Coords;
             Score = 0;
+            Timer = new Clock();
+            IsDead = false;
+            OnDrugs = false;
         }
         public void Turn(Direction dir)
         {
@@ -42,7 +49,22 @@ namespace Pacman.Entities
             if(Position == null)
                 return;
 
-            for(var move = Defines.BaseSpeed; move > 0; move--)
+            if(OnDrugs && Timer.ElapsedTime.AsMilliseconds() >= 7000)
+            {
+                OnDrugs = false;
+                if(Map.Blinky.Mode == GhostMode.Frightened)
+                    Map.Blinky.Mode = GhostMode.Chase;
+                if(Map.Pinky.Mode == GhostMode.Frightened)
+                    Map.Pinky.Mode = GhostMode.Chase;
+                if(Map.Inky.Mode == GhostMode.Frightened)
+                    Map.Inky.Mode = GhostMode.Chase;
+                if(Map.Clyde.Mode == GhostMode.Frightened)
+                    Map.Clyde.Mode = GhostMode.Chase;
+            }
+
+            var speed = Defines.BaseSpeed * (OnDrugs ? Defines.PacmanSpeed.OnDrugs : Defines.PacmanSpeed.Normal);
+
+            for(var move = speed; move > 0; move--)
             {
                 // checking whether it's possible to turn
                 CheckTurn();
@@ -141,21 +163,51 @@ namespace Pacman.Entities
                     Map.Counter++;
                     
                     // on drugs!!!
+                    OnDrugs = true;
+                    ghostEatenMultiplier = 0;
+
+                    Map.Blinky.Mode = GhostMode.Frightened;
+                    Map.Pinky.Mode = GhostMode.Frightened;
+                    Map.Inky.Mode = GhostMode.Frightened;
+                    Map.Clyde.Mode = GhostMode.Frightened;
+
+                    Timer.Restart();
                 }
 
                 previousTile.SetPacman(false);
                 currentTile.SetPacman(true);
 
-                if(currentTile.GhostsContaining > 0)
+                CheckGhosts(currentTile);
+                if(IsDead)
                 {
-                    throw new NotImplementedException();
+                    Sprite.Position = Coords;
+                    return;
                 }
             }
-            if(Map[Position].GhostsContaining > 0)
-            {
-                throw new NotImplementedException();
-            }
+            CheckGhosts(Map[Position]);
             Sprite.Position = Coords;
+        }
+        private void CheckGhosts(Tile currentTile)
+        {
+            if(currentTile.GhostsContaining > 0)
+            {
+                var ghosts = Map.GhostsInTile(currentTile.Position);
+                foreach(var ghost in ghosts)
+                {
+                    if(ghost.Mode == GhostMode.Dead)
+                        continue;
+                    if(ghost.Mode == GhostMode.Frightened)
+                    {
+                        ghostEatenMultiplier = (ghostEatenMultiplier == 0 ? 1 : 2 * ghostEatenMultiplier);
+                        Score += ghostEatenMultiplier * 200;
+                        ghost.Mode = GhostMode.Dead;
+                        continue;
+                    }
+                    IsDead = true;
+                    Console.WriteLine("YEET");
+                    break;
+                }
+            }
         }
         private void CheckTurn()
         {

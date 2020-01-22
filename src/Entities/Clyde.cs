@@ -6,7 +6,7 @@ namespace Pacman.Entities
 {
     public class Clyde : Ghost
     {
-        public Clyde(Map map, Player player) : base(map, player, Textures.Clyde, MapData.Clyde)
+        public Clyde(Map map) : base(map, Textures.Clyde, MapData.Clyde)
         {
             Coords = MapData.Clyde.SpawnCoords;
             RespawnPosition = MapData.Clyde.RespawnPosition;
@@ -15,10 +15,10 @@ namespace Pacman.Entities
 
         protected override Position_t GetDestination()
         {
-            if(IsDead)
+            if(Mode == GhostMode.Dead)
                 return RespawnPosition;
-            return Functions.Distance(Player.Position.Value, Position.Value) < 8 ?
-                    new Position_t(0, Map.Height) : Player.Position.Value;
+            return Functions.Distance(Map.Player.Position.Value, Position.Value) < 8 ?
+                    new Position_t(0, Map.Height) : Map.Player.Position.Value;
         }
         protected override bool MayLeave()
         {

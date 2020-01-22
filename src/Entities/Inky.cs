@@ -6,22 +6,20 @@ namespace Pacman.Entities
 {
     public class Inky : Ghost
     {
-        private Blinky Blinky { get; set; }
-        public Inky(Map map, Player player, Blinky blinky) : base(map, player, Textures.Inky, MapData.Inky)
+        public Inky(Map map) : base(map, Textures.Inky, MapData.Inky)
         {
             Coords = MapData.Inky.SpawnCoords;
             RespawnPosition = MapData.Inky.RespawnPosition;
             Sprite.Position = Coords;
-            Blinky = blinky;
         }
         protected override Position_t GetDestination()
         {
-            if(IsDead)
+            if(Mode == GhostMode.Dead)
                 return RespawnPosition;
             else
             {
-                var offsetPosition = Player.Position + 2 * Directions.Table[(int)Player.FaceDirection];
-                var diff = offsetPosition - Blinky.Position.Value;
+                var offsetPosition = Map.Player.Position + 2 * Directions.Table[(int)Map.Player.FaceDirection];
+                var diff = offsetPosition - Map.Blinky.Position.Value;
 
                 return offsetPosition + diff;
             }

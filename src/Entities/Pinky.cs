@@ -5,7 +5,7 @@ namespace Pacman.Entities
 {
     public class Pinky : Ghost
     {
-        public Pinky(Map map, Player player) : base(map, player, Textures.Pinky, MapData.Pinky)
+        public Pinky(Map map) : base(map, Textures.Pinky, MapData.Pinky)
         {
             Coords = MapData.Pinky.SpawnCoords;
             RespawnPosition = MapData.Pinky.RespawnPosition;
@@ -13,7 +13,7 @@ namespace Pacman.Entities
         }
         protected override Position_t GetDestination()
         {
-            return IsDead ? RespawnPosition : Player.Position + 4 * Directions.Table[(int)Player.FaceDirection];
+            return Mode == GhostMode.Dead ? RespawnPosition : Map.Player.Position + 4 * Directions.Table[(int)Map.Player.FaceDirection];
         }
         protected override bool MayLeave()
         {

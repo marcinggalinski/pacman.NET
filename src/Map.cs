@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Pacman.Config;
 using Pacman.Entities;
 using Pacman.Utilities;
@@ -16,6 +17,13 @@ namespace Pacman
         public int Height { get; set; }
         public Clock Timer { get; set; }
         public int Counter { get; set; }
+        public int NOfDots { get; }
+
+        public Player Player { get; private set; }
+        public Blinky Blinky { get; private set; }
+        public Pinky Pinky { get; private set; }
+        public Inky Inky { get; private set; }
+        public Clyde Clyde { get; private set; }
 
         // ctor
         public Map()
@@ -103,6 +111,28 @@ namespace Pacman
         public bool IsOffTheMap(Position_t position)
         {
             return position.Column < 0 || position.Column >= Width || position.Row < 0 || position.Row >= Height;
+        }
+        public void SetPointers(Player player, Blinky blinky, Pinky pinky, Inky inky, Clyde clyde)
+        {
+            Player = player;
+            Blinky = blinky;
+            Pinky = pinky;
+            Inky = inky;
+            Clyde = clyde;
+        }
+
+        public Ghost[] GhostsInTile(Position_t position)
+        {
+            var ghosts = new List<Ghost>();
+            if(Blinky.Position == position)
+                ghosts.Add(Blinky);
+            if(Pinky.Position == position)
+                ghosts.Add(Pinky);
+            if(Inky.Position == position)
+                ghosts.Add(Inky);
+            if(Clyde.Position == position)
+                ghosts.Add(Clyde);
+            return ghosts.ToArray();
         }
     }
 }

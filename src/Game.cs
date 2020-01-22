@@ -21,17 +21,23 @@ namespace Pacman
             
             var map = new Map();
             var player = new Player(map);
-            var blinky = new Blinky(map, player);
-            var pinky = new Pinky(map, player);
-            var inky = new Inky(map, player, blinky);
-            var clyde = new Clyde(map, player);
+            var blinky = new Blinky(map);
+            var pinky = new Pinky(map);
+            var inky = new Inky(map);
+            var clyde = new Clyde(map);
+
+            map.SetPointers(player, blinky, pinky, inky, clyde);
 
             Handlers.SetupGameEvents(window, player);
+
+            var level = 1;
+            MapData.LoadLevel(level);
 
             var clock = new Clock();
             var previousTime = Time.FromMilliseconds(0);
             var currentTime = new Time();
             var dt = new Time();
+            
             while(window.IsOpen)
             {
                 currentTime = clock.ElapsedTime;
@@ -58,6 +64,15 @@ namespace Pacman
                 clyde.Draw(window);
                 
                 window.Display();
+
+                if(player.IsDead)
+                    window.Close();
+                
+                if(map.Counter == MapData.NOfDots)
+                {
+                    System.Console.WriteLine("WEEEE!");
+                    window.Close();
+                }
             }
         }
     }
