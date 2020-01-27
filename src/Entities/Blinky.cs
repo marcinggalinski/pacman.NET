@@ -13,6 +13,12 @@ namespace Pacman.Entities
             IsOut = true;
             Mode = GhostMode.Chase;
         }
+        public void Respawn()
+        {
+            Respawn(MapData.Blinky);
+            IsOut = true;
+            Mode = GhostMode.Chase;
+        }
         protected override Position_t GetDestination() => Mode == GhostMode.Dead ? RespawnPosition : Map.Player.Position.Value;
         protected override bool MayLeave() => WasDead ? Timer.ElapsedTime.AsMilliseconds() > 1000 : true;
     }

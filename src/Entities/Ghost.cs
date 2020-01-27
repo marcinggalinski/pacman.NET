@@ -103,6 +103,15 @@ namespace Pacman.Entities
             Timer = new Clock();
         }
 
+        public void Respawn(MapData.ActorData data)
+        {
+            Respawn(data.SpawnCoords);
+            Mode = GhostMode.Idle;
+            WasDead = false;
+            IsOut = false;
+            ChangedTile = false;
+        }
+
         private void CheckTurn()
         {
             // to shorten conditions
@@ -187,7 +196,7 @@ namespace Pacman.Entities
                     if((Direction)i == Direction.None)
                         continue;
                     Position = Map.FindTilePosition(Coords + Directions.Table[i]);
-                    if(Position != null)
+                    if(Position != null && !Map[Position.Value].IsWall())
                     {
                         ChangedTile = true;
                         break;

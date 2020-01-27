@@ -4,6 +4,7 @@ using Pacman.Entities;
 using SFML.Graphics;
 using SFML.Window;
 using SFML.System;
+using System;
 
 namespace Pacman
 {
@@ -20,7 +21,7 @@ namespace Pacman
                 "Pacman.NET");
             
             var map = new Map();
-            var player = new Player(map);
+            var player = new Player(map, 3);
             var blinky = new Blinky(map);
             var pinky = new Pinky(map);
             var inky = new Inky(map);
@@ -66,7 +67,21 @@ namespace Pacman
                 window.Display();
 
                 if(player.IsDead)
-                    window.Close();
+                {
+                    if(player.Lives > 0)
+                    {
+                        player.Respawn();
+                        blinky.Respawn();
+                        pinky.Respawn();
+                        inky.Respawn();
+                        clyde.Respawn();
+                    }
+                    else
+                    {
+                        Console.WriteLine("GAME OVER");
+                        window.Close();
+                    }
+                }
                 
                 if(map.Counter == MapData.NOfDots)
                 {

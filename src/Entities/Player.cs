@@ -11,12 +11,13 @@ namespace Pacman.Entities
         // properties
         public Direction FaceDirection { get; set; }
         public int Score { get; private set; }
+        public int Lives { get; private set; }
         public bool IsDead { get; private set; }
-        public bool OnDrugs { get; private set; }
+        public bool IsOnDrugs { get; private set; }
         private Clock Timer { get; set; }
         private int ghostEatenMultiplier = 0;
 
-        public Player(Map map) : base(map, MapData.Pacman.SpawnCoords)
+        public Player(Map map, int lives) : base(map, MapData.Pacman.SpawnCoords)
         {
             Sprite = new Sprite(Textures.Pacman);
             Sprite.Scale = new Vector2f(
@@ -24,9 +25,17 @@ namespace Pacman.Entities
                 (float)Defines.TileSize / Textures.Pacman.Size.Y);
             Sprite.Position = Coords;
             Score = 0;
+            Lives = lives;
             Timer = new Clock();
             IsDead = false;
-            OnDrugs = false;
+            IsOnDrugs = false;
+        }
+
+        public void Respawn()
+        {
+            Respawn(MapData.Pacman.SpawnCoords);
+            IsDead = false;
+            IsOnDrugs = false;
         }
         public void Turn(Direction dir)
         {
@@ -36,11 +45,12 @@ namespace Pacman.Entities
                 return;
             }
             Position = Map.FindTilePosition(Coords + Directions.Table[(int)dir]);
-            if(Position != null)
+            if(Position != null && !Map[Position.Value].IsWall())
             {
                 PlannedTurn = dir;
-                MoveDirection = dir;
-                FaceDirection = dir;
+                CheckTurn();
+                if(MoveDirection == Direction.None)
+                    Position = null;
                 Map.Timer.Restart();
             }
         }
@@ -49,9 +59,9 @@ namespace Pacman.Entities
             if(Position == null)
                 return;
 
-            if(OnDrugs && Timer.ElapsedTime.AsMilliseconds() >= 7000)
+            if(IsOnDrugs && Timer.ElapsedTime.AsMilliseconds() >= 7000)
             {
-                OnDrugs = false;
+                IsOnDrugs = false;
                 if(Map.Blinky.Mode == GhostMode.Frightened)
                     Map.Blinky.Mode = GhostMode.Chase;
                 if(Map.Pinky.Mode == GhostMode.Frightened)
@@ -62,7 +72,7 @@ namespace Pacman.Entities
                     Map.Clyde.Mode = GhostMode.Chase;
             }
 
-            var speed = Defines.BaseSpeed * (OnDrugs ? Defines.PacmanSpeed.OnDrugs : Defines.PacmanSpeed.Normal);
+            var speed = Defines.BaseSpeed * (IsOnDrugs ? Defines.PacmanSpeed.IsOnDrugs : Defines.PacmanSpeed.Normal);
 
             for(var move = speed; move > 0; move--)
             {
@@ -161,9 +171,7 @@ namespace Pacman.Entities
                     Score += 50;
                     Map.Timer.Restart();
                     Map.Counter++;
-                    
-                    // on drugs!!!
-                    OnDrugs = true;
+                    IsOnDrugs = true;
                     ghostEatenMultiplier = 0;
 
                     Map.Blinky.Mode = GhostMode.Frightened;
@@ -181,6 +189,7 @@ namespace Pacman.Entities
                 if(IsDead)
                 {
                     Sprite.Position = Coords;
+                    Lives--;
                     return;
                 }
             }
@@ -222,7 +231,8 @@ namespace Pacman.Entities
                 // if it's possible, turn
                 if(!Map[Position + Directions.Table[dir]].IsWall())
                 {
-                    if(Directions.Table[dir] == -Directions.Table[(int)MoveDirection])
+                    if(MoveDirection == Direction.None
+                       || Directions.Table[dir] == -Directions.Table[(int)MoveDirection])
                     {
                         MoveDirection = direction;
                         FaceDirection = direction;

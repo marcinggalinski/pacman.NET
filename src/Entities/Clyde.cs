@@ -12,7 +12,10 @@ namespace Pacman.Entities
             RespawnPosition = MapData.Clyde.RespawnPosition;
             Sprite.Position = Coords;
         }
-
+        public void Respawn()
+        {
+            Respawn(MapData.Clyde);
+        }
         protected override Position_t GetDestination()
         {
             if(Mode == GhostMode.Dead)

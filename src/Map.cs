@@ -94,6 +94,7 @@ namespace Pacman
                        && center.Y > corner.Y
                        && center.Y < corner.Y + Defines.TileSize)
                     {
+                        /*
                         if(tiles[c, r].Content == TileContent.Wall)
                         {
                             return null;
@@ -102,6 +103,8 @@ namespace Pacman
                         {
                             return new Position_t(c, r);
                         }
+                        */
+                        return new Position_t(c, r);
                     }
                 }
             }

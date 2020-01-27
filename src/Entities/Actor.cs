@@ -21,6 +21,15 @@ namespace Pacman.Entities
             Coords = coords;
         }
 
+        public void Respawn(Coords_t coords)
+        {
+            Coords = coords;
+            Position = null;
+            Sprite.Position = Coords;
+            PlannedTurn = Direction.None;
+            MoveDirection = Direction.None;
+        }
+
         // public methods
         public abstract void Move();
         public void Draw(RenderWindow window)

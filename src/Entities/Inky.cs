@@ -12,6 +12,10 @@ namespace Pacman.Entities
             RespawnPosition = MapData.Inky.RespawnPosition;
             Sprite.Position = Coords;
         }
+        public void Respawn()
+        {
+            Respawn(MapData.Inky);
+        }
         protected override Position_t GetDestination()
         {
             if(Mode == GhostMode.Dead)

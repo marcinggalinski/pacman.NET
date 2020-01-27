@@ -77,7 +77,7 @@
             "lastLevel" : 1,
             "pacmanSpeed" : {
                 "normal" : 0.8,
-                "onDrugs" : 0.9
+                "IsOnDrugs" : 0.9
             },
             "ghostSpeed" : {
                 "normal" : 0.75,
@@ -89,7 +89,7 @@
             "lastLevel" : 4,
             "pacmanSpeed" : {
                 "normal" : 0.9,
-                "onDrugs" : 0.95
+                "IsOnDrugs" : 0.95
             },
             "ghostSpeed" : {
                 "normal" : 0.75,
@@ -101,7 +101,7 @@
             "lastLevel" : 20,
             "pacmanSpeed" : {
                 "normal" : 1,
-                "onDrugs" : 1
+                "IsOnDrugs" : 1
             },
             "ghostSpeed" : {
                 "normal" : 0.95,
@@ -113,7 +113,7 @@
             "lastLevel" : 2147483647,
             "pacmanSpeed" : {
                 "normal" : 0.9,
-                "onDrugs" : 0.9
+                "IsOnDrugs" : 0.9
             },
             "ghostSpeed" : {
                 "normal" : 0.95,
