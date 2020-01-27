@@ -45,6 +45,7 @@ namespace Pacman.Entities
                     return;
                 case GhostMode.Frightened:
                     if(mode == GhostMode.Idle
+                       || mode == GhostMode.Frightened
                        || mode == GhostMode.Dead
                        || Map[Position].Content == TileContent.Ghosthouse
                        || Map[Position].Content == TileContent.GhosthouseDoor)
@@ -446,13 +447,7 @@ namespace Pacman.Entities
             Tile currentTile = Map[Position];
 
             if(Mode == GhostMode.Frightened)
-            {
-                // if(Coords.X >= currentTile.Coords.X + 0.5
-                //    || Coords.X <= currentTile.Coords.X - 0.5
-                //    || Coords.Y >= currentTile.Coords.Y + 0.5
-                //    || Coords.Y <= currentTile.Coords.Y - 0.5)
-                //     return MoveDirection;
-                
+            {                
                 Random rand = new Random();
 
                 while(true)
