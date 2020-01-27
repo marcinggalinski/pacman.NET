@@ -195,6 +195,12 @@ namespace Pacman.Entities
             }
             CheckGhosts(Map[Position]);
             Sprite.Position = Coords;
+            if(IsDead)
+            {
+                Sprite.Position = Coords;
+                Lives--;
+                return;
+            }
         }
         private void CheckGhosts(Tile currentTile)
         {

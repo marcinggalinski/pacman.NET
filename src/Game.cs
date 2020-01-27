@@ -70,6 +70,7 @@ namespace Pacman
                 {
                     if(player.Lives > 0)
                     {
+                        Console.WriteLine(player.Lives);
                         player.Respawn();
                         blinky.Respawn();
                         pinky.Respawn();
