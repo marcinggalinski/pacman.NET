@@ -1,3 +1,4 @@
+using Pacman.Entities;
 using System;
 using SFML.System;
 
@@ -219,12 +220,26 @@ namespace Pacman.Utilities
         {
             return (int)Math.Sqrt(Math.Pow(p2.Column - p1.Column, 2) - Math.Pow(p2.Row - p1.Row, 2));
         }
+
         public static double DirDot(Direction dir1, Direction dir2)
         {
             var v1 = Directions.Table[(int)dir1];
             var v2 = Directions.Table[(int)dir2];
 
             return v1.X * v2.X + v1.Y * v2.Y;
+        }
+        
+        public static Tile[,] DeepClone(Tile[,] tiles)
+        {
+            int c = tiles.GetLength(0);
+            int r = tiles.GetLength(1);
+            Tile[,] tiles_ = new Tile[c, r];
+
+            for(int i = 0; i < c; i++)
+                for(int j = 0; j < r; j++)
+                    tiles_[i, j] = new Tile(tiles[i, j]);
+
+            return tiles_;
         }
     }
 }

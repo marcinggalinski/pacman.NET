@@ -16,6 +16,13 @@ namespace Pacman.Entities
         private Sprite Sprite { get; set; }
 
         // ctors
+        public Tile(Tile tile)
+        {
+            Position = tile.Position;
+            Coords = tile.Coords;
+            Content = tile.Content;
+            Sprite = tile.Sprite == null ? null : new Sprite(tile.Sprite);
+        }
         public Tile(Position_t position, TileContent content)
         {
             Position = position;

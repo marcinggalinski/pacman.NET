@@ -235,7 +235,6 @@ namespace Pacman.Config
 
             // reading and parsing map file
             string mapName = JObject.Parse(new StreamReader("settings.json").ReadToEnd())["map"].ToString();
-            Console.WriteLine(mapName);
             var map = JObject.Parse(new StreamReader("maps/" + mapName + ".pmmap").ReadToEnd());
 
             // finding level in map file

@@ -105,11 +105,12 @@ namespace Pacman.Entities
 
         public void Respawn(MapData.ActorData data)
         {
-            Respawn(data.SpawnCoords);
             Mode = GhostMode.Idle;
+            Sprite = Sprites.Normal;
             WasDead = false;
             IsOut = false;
             ChangedTile = false;
+            Respawn(data.SpawnCoords);
         }
 
         private void CheckTurn()

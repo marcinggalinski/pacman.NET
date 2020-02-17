@@ -87,7 +87,8 @@ namespace Pacman
                 if(map.Counter == MapData.NOfDots)
                 {
                     System.Console.WriteLine("WEEEE!");
-                    window.Close();
+                    MapData.LoadLevel(++level);
+                    map.Reset();
                 }
             }
         }

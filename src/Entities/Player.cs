@@ -37,6 +37,7 @@ namespace Pacman.Entities
             IsDead = false;
             IsOnDrugs = false;
         }
+
         public void Turn(Direction dir)
         {
             if(Position != null)

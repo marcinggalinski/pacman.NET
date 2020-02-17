@@ -30,9 +30,20 @@ namespace Pacman
         {
             Width = MapData.Width;
             Height = MapData.Height;
-            tiles = MapData.Tiles;
+            tiles = Functions.DeepClone(MapData.Tiles);
             Timer = new Clock();
             Counter = 0;
+        }
+
+        public void Reset()
+        {
+            tiles = Functions.DeepClone(MapData.Tiles);
+            Counter = 0;
+            Player.Respawn();
+            Blinky.Respawn();
+            Pinky.Respawn();
+            Inky.Respawn();
+            Clyde.Respawn();
         }
 
         // indexer
