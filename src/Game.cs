@@ -26,6 +26,7 @@ namespace Pacman
             var pinky = new Pinky(map);
             var inky = new Inky(map);
             var clyde = new Clyde(map);
+            var hud = new Hud(player);
 
             map.SetPointers(player, blinky, pinky, inky, clyde);
 
@@ -57,6 +58,7 @@ namespace Pacman
                 inky.Move();
                 clyde.Move();
 
+                hud.Draw(window);
                 map.Draw(window);
                 player.Draw(window);
                 blinky.Draw(window);
