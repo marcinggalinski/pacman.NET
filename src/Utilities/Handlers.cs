@@ -7,6 +7,8 @@ namespace Pacman.Utilities
 {
     public static class Handlers
     {
+        public static bool BlockGameEvents { get; set; } = false;
+
         private static void OnClose(object sender, EventArgs e)
         {
             ((RenderWindow)sender).Close();
@@ -19,16 +21,20 @@ namespace Pacman.Utilities
                 ((RenderWindow)sender).Close();
                 break;
             case Keyboard.Key.Up:
-                player.Turn(Direction.Up);
+                if(!BlockGameEvents)
+                    player.Turn(Direction.Up);
                 break;
             case Keyboard.Key.Down:
-                player.Turn(Direction.Down);
+                if(!BlockGameEvents)
+                    player.Turn(Direction.Down);
                 break;
             case Keyboard.Key.Left:
-                player.Turn(Direction.Left);
+                if(!BlockGameEvents)
+                    player.Turn(Direction.Left);
                 break;
             case Keyboard.Key.Right:
-                player.Turn(Direction.Right);
+                if(!BlockGameEvents)
+                    player.Turn(Direction.Right);
                 break;
             default:
                 break;

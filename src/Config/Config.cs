@@ -229,7 +229,7 @@ namespace Pacman.Config
             }
         }
 
-        public static void LoadLevel(int level)
+        public static void LoadLevel(uint level)
         {
             Console.WriteLine($"Loading level {level}");
 
