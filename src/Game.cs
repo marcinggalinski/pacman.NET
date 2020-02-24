@@ -6,6 +6,7 @@ using SFML.Window;
 using SFML.System;
 using System;
 using System.Diagnostics;
+using System.Threading;
 
 namespace Pacman
 {
@@ -13,6 +14,7 @@ namespace Pacman
     {
         // properties and variables
         private static RenderWindow Window { get; set; }
+        private static Mutex WindowMutex { get; set; } = new Mutex();
         private static Hud Hud { get; set; }
         private static Map Map { get; set; }
         private static Player Player { get; set; }
@@ -35,6 +37,7 @@ namespace Pacman
             Window = new RenderWindow(
                 new VideoMode(Settings.Resolution.Width, Settings.Resolution.Height),
                 "Pacman.NET");
+            Window.SetActive(false);
             
             Map = new Map();
             Player = new Player(Map, 3);
@@ -79,17 +82,15 @@ namespace Pacman
             var previousTime = Time.FromMilliseconds(0);
             var currentTime = new Time();
             var dt = new Time();
+            Clock.Restart();
             
             while(Window.IsOpen)
             {
+                WindowMutex.WaitOne();
+
                 currentTime = Clock.ElapsedTime;
                 dt = currentTime - previousTime;
-                if(dt.AsMilliseconds() < 1000.0/Settings.MaxFPS)
-                    continue;
 
-                previousTime = currentTime;
-
-                Window.DispatchEvents();
                 Window.Clear();
 
                 Player.Move();
@@ -112,7 +113,6 @@ namespace Pacman
                 {
                     if(Player.Lives > 0)
                     {
-                        Console.WriteLine(Player.Lives);
                         Player.Respawn();
                         Blinky.Respawn();
                         Pinky.Respawn();
@@ -126,7 +126,6 @@ namespace Pacman
                     }
                     else
                     {
-                        Console.WriteLine("GAME OVER");
                         DisplayMessage("GAME OVER", 1000);
                         Window.Close();
                     }
@@ -134,19 +133,41 @@ namespace Pacman
                 
                 if(Map.Counter == MapData.NOfDots)
                 {
-                    System.Console.WriteLine("WEEEE!");
                     MapData.LoadLevel(++level);
                     Map.Reset();
                     DisplayMessage($"Level {level}", 1000);
                 }
+
+                Window.SetActive(false);
+                WindowMutex.ReleaseMutex();
+
+                previousTime = Clock.ElapsedTime;
+                Thread.Sleep((int)(1000.0 / Settings.MaxFPS));
             }
         }
 
         public static void Main()
         {
             Initialize();
+
             DisplayMessage($"Level {level}", 1000);
-            GameLoop();
+
+            var GameLoopThread = new Thread(new ThreadStart(GameLoop));
+            GameLoopThread.Start();
+
+            while(Window.IsOpen)
+            {
+                WindowMutex.WaitOne();
+
+                Window.DispatchEvents();
+
+                Window.SetActive(false);
+                WindowMutex.ReleaseMutex();
+
+                Thread.Sleep(10);
+            }
+
+            GameLoopThread.Join();
         }
     }
 }

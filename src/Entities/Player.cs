@@ -220,7 +220,6 @@ namespace Pacman.Entities
                         continue;
                     }
                     IsDead = true;
-                    Console.WriteLine("YEET");
                     break;
                 }
             }

@@ -115,7 +115,7 @@ namespace Pacman.Config
 
         public static void Load()
         {
-            Console.WriteLine("Loading map");
+            Console.Write("Loading map ");
 
             // reading and parsing map file
             string mapName = JObject.Parse(new StreamReader("settings.json").ReadToEnd())["map"].ToString();
