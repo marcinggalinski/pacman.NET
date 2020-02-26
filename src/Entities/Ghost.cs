@@ -289,6 +289,8 @@ namespace Pacman.Entities
 
             previousTile.GhostsContaining--;
             currentTile.GhostsContaining++;
+
+            Map.Player.CheckGhosts();
         }
 
         public override void Move(Time dt)
@@ -330,7 +332,14 @@ namespace Pacman.Entities
                 distance *= Defines.GhostSpeed.Normal;
 
             for(; distance > 1.0; distance--)
+            {
+                if(Map.Player.IsDead)
+                {
+                    Sprite.Position = Coords;
+                    return;
+                }
                 Move(1.0);
+            }
             Move(distance);
             Sprite.Position = Coords;
         }

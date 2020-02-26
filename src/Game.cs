@@ -122,7 +122,7 @@ namespace Pacman
                         if(Player.Lives > 1)
                             DisplayMessage($"{Player.Lives} lives left", 1000);
                         else
-                            DisplayMessage("1 live left", 1000);
+                            DisplayMessage("1 life left", 1000);
                     }
                     else
                     {

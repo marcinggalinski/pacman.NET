@@ -12,7 +12,18 @@ namespace Pacman.Entities
         public Direction FaceDirection { get; set; }
         public int Score { get; private set; }
         public int Lives { get; private set; }
-        public bool IsDead { get; private set; }
+        private bool isDead;
+        public bool IsDead
+        {
+            get => isDead;
+            set
+            {
+                if(value)
+                    Lives--;
+                isDead = value;
+                Sprite.Position = Coords;
+            }
+        }
         public bool IsOnDrugs { get; private set; }
         private Clock Timer { get; set; }
         private int ghostEatenMultiplier = 0;
@@ -167,13 +178,9 @@ namespace Pacman.Entities
             previousTile.SetPacman(false);
             currentTile.SetPacman(true);
 
-            CheckGhosts(currentTile);
+            CheckGhosts();
             if(IsDead)
-            {
-                Sprite.Position = Coords;
-                Lives--;
                 return;
-            }
         }
 
         public override void Move(Time dt)
@@ -206,8 +213,9 @@ namespace Pacman.Entities
             Move(distance);
             Sprite.Position = Coords;
         }
-        private void CheckGhosts(Tile currentTile)
+        public void CheckGhosts()
         {
+            var currentTile = Map[Position];
             if(currentTile.GhostsContaining > 0)
             {
                 var ghosts = Map.GhostsInTile(currentTile.Position);
