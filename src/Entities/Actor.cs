@@ -1,6 +1,7 @@
 using System;
 using Pacman.Config;
 using Pacman.Utilities;
+using SFML.System;
 using SFML.Graphics;
 
 namespace Pacman.Entities
@@ -31,7 +32,7 @@ namespace Pacman.Entities
         }
 
         // public methods
-        public abstract void Move();
+        public abstract void Move(Time dt);
         public void Draw(RenderWindow window)
         {
             window.Draw(Sprite);

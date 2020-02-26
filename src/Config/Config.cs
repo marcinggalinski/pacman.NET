@@ -81,7 +81,7 @@ namespace Pacman.Config
         public static float HudMargin { get; set; }
         public static float TileSize { get; set; }
         public static float BaseSpeed { get; set; }
-        public static (float Normal, float IsOnDrugs) PacmanSpeed { get; set; }
+        public static (float Normal, float OnDrugs) PacmanSpeed { get; set; }
         public static (float Normal, float Frightened, float InTunel) GhostSpeed { get; set; }
     }
 
@@ -245,7 +245,7 @@ namespace Pacman.Config
             // reading actor speeds
             Defines.PacmanSpeed = (
                 map["levels"][idx]["pacmanSpeed"]["normal"].ToObject<float>(),
-                map["levels"][idx]["pacmanSpeed"]["IsOnDrugs"].ToObject<float>());
+                map["levels"][idx]["pacmanSpeed"]["onDrugs"].ToObject<float>());
             Defines.GhostSpeed = (
                 map["levels"][idx]["ghostSpeed"]["normal"].ToObject<float>(),
                 map["levels"][idx]["ghostSpeed"]["frightened"].ToObject<float>(),

@@ -218,7 +218,7 @@ namespace Pacman.Utilities
     {
         public static int Distance(Position_t p1, Position_t p2)
         {
-            return (int)Math.Sqrt(Math.Pow(p2.Column - p1.Column, 2) - Math.Pow(p2.Row - p1.Row, 2));
+            return (int)Math.Sqrt(Math.Pow(p2.Column - p1.Column, 2) + Math.Pow(p2.Row - p1.Row, 2));
         }
 
         public static double DirDot(Direction dir1, Direction dir2)

@@ -4,6 +4,6 @@
         "height" : 600
     },
     "fullscreen" : false,
-    "maxFPS" : 60,
+    "maxFPS" : 144,
     "map" : "default"
 }

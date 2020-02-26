@@ -55,7 +55,128 @@ namespace Pacman.Entities
                 Map.Timer.Restart();
             }
         }
-        public override void Move()
+
+        private void Move(double distance)
+        {
+            // checking whether it's possible to turn
+            CheckTurn();
+
+            // to shorten conditions
+            Tile currentTile = Map[Position];
+            var direction = MoveDirection;
+            var dir = (int)direction;
+
+            // move
+            // if in a tunel, go through it
+            if(IsAtBorder() && currentTile.Content == TileContent.Tunel)
+            {
+                // but still don't go through walls
+                try
+                {
+                    if((Map[Position + Directions.Table[dir]].IsWall())
+                        && Coords.X + Directions.Table[dir].X >= currentTile.Coords.X - 0.5
+                        && Coords.X + Directions.Table[dir].X <= currentTile.Coords.X + 0.5
+                        && Coords.Y + Directions.Table[dir].Y >= currentTile.Coords.Y - 0.5
+                        && Coords.Y + Directions.Table[dir].Y <= currentTile.Coords.Y + 0.5)
+                    {
+                        Coords = currentTile.Coords;
+                        MoveDirection = Direction.None;
+                        direction = MoveDirection;
+                        dir = (int)direction;
+                    }
+                }
+                catch(InvalidTilePositionException)
+                {
+                    //
+                }
+
+                // change coords
+                Coords += Directions.Table[dir];
+
+                // if passed edge of tile (and therefore edge of map), move to the other side
+                var center = new Coords_t(Coords + new Coords_t(Defines.TileSize / 2));
+                if(center.X < Map[0, 0].Coords.X
+                    || center.X > Map[Map.Width - 1, 0].Coords.X + Defines.TileSize
+                    || center.Y < Map[0, 0].Coords.Y
+                    || center.Y > Map[0, Map.Height - 1].Coords.Y + Defines.TileSize)
+                {
+                    Position = (Position + new Position_t(Map.Width, Map.Height) + Directions.Table[dir])
+                                % new Vector2i(Map.Width, Map.Height);
+                    Coords = Map[Position].Coords + currentTile.Coords - Coords;
+                }
+                else if(center.X < currentTile.Coords.X
+                        || center.X > currentTile.Coords.X + Defines.TileSize
+                        || center.Y < currentTile.Coords.Y
+                        || center.Y > currentTile.Coords.Y + Defines.TileSize)
+                {
+                    Position += Directions.Table[dir];
+                }
+            }
+            // if about to hit wall, well, don't
+            else if((Map[Position + Directions.Table[dir]].Content == TileContent.Wall
+                        || Map[Position + Directions.Table[dir]].Content == TileContent.GhosthouseDoor)
+                    && Coords.X + Directions.Table[dir].X >= currentTile.Coords.X - 0.5
+                    && Coords.X + Directions.Table[dir].X <= currentTile.Coords.X + 0.5
+                    && Coords.Y + Directions.Table[dir].Y >= currentTile.Coords.Y - 0.5
+                    && Coords.Y + Directions.Table[dir].Y <= currentTile.Coords.Y + 0.5)
+            {
+                Coords = currentTile.Coords;
+                MoveDirection = Direction.None;
+            }
+            // otherwise just go
+            else
+            {
+                Coords += Directions.Table[dir];
+                var center = Coords + new Coords_t(Defines.TileSize / 2);
+                if(center.X < currentTile.Coords.X
+                    || center.X > currentTile.Coords.X + Defines.TileSize
+                    || center.Y < currentTile.Coords.Y
+                    || center.Y > currentTile.Coords.Y + Defines.TileSize)
+                {
+                    Position += Directions.Table[dir];
+                }
+            }
+
+            var previousTile = currentTile;
+            currentTile = Map[Position];
+            if(previousTile == currentTile)
+                return;
+
+            if(currentTile.Content == TileContent.Dot)
+            {
+                Score += 10;
+                Map.Timer.Restart();
+                Map.Counter++;
+            }
+            else if(currentTile.Content == TileContent.SuperDot)
+            {
+                Score += 50;
+                Map.Timer.Restart();
+                Map.Counter++;
+                IsOnDrugs = true;
+                ghostEatenMultiplier = 0;
+
+                Map.Blinky.Mode = GhostMode.Frightened;
+                Map.Pinky.Mode = GhostMode.Frightened;
+                Map.Inky.Mode = GhostMode.Frightened;
+                Map.Clyde.Mode = GhostMode.Frightened;
+
+                Timer.Restart();
+            }
+
+            previousTile.SetPacman(false);
+            currentTile.SetPacman(true);
+
+            CheckGhosts(currentTile);
+            if(IsDead)
+            {
+                Sprite.Position = Coords;
+                Lives--;
+                return;
+            }
+        }
+
+        public override void Move(Time dt)
         {
             if(Position == null)
                 return;
@@ -73,135 +194,17 @@ namespace Pacman.Entities
                     Map.Clyde.Mode = GhostMode.Chase;
             }
 
-            var speed = Defines.BaseSpeed * (IsOnDrugs ? Defines.PacmanSpeed.IsOnDrugs : Defines.PacmanSpeed.Normal);
+            var distance = Defines.BaseSpeed * Defines.TileSize * dt.AsMilliseconds() / 1000.0
+                       * (IsOnDrugs ? Defines.PacmanSpeed.OnDrugs : Defines.PacmanSpeed.Normal);
 
-            for(var move = speed; move > 0; move--)
+            for(; distance > 1.0; distance--)
             {
-                // checking whether it's possible to turn
-                CheckTurn();
-
-                // to shorten conditions
-                Tile currentTile = Map[Position];
-                var direction = MoveDirection;
-                var dir = (int)direction;
-
-                // move
-                // if in a tunel, go through it
-                if(IsAtBorder() && currentTile.Content == TileContent.Tunel)
-                {
-                    // but still don't go through walls
-                    try
-                    {
-                        if((Map[Position + Directions.Table[dir]].IsWall())
-                           && Coords.X + Directions.Table[dir].X >= currentTile.Coords.X - 0.5
-                           && Coords.X + Directions.Table[dir].X <= currentTile.Coords.X + 0.5
-                           && Coords.Y + Directions.Table[dir].Y >= currentTile.Coords.Y - 0.5
-                           && Coords.Y + Directions.Table[dir].Y <= currentTile.Coords.Y + 0.5)
-                        {
-                            Coords = currentTile.Coords;
-                            MoveDirection = Direction.None;
-                            direction = MoveDirection;
-                            dir = (int)direction;
-                        }
-                    }
-                    catch(InvalidTilePositionException)
-                    {
-                        //
-                    }
-
-                    // change coords
-                    Coords += Directions.Table[dir];
-
-                    // if passed edge of tile (and therefore edge of map), move to the other side
-                    var center = new Coords_t(Coords + new Coords_t(Defines.TileSize / 2));
-                    if(center.X < Map[0, 0].Coords.X
-                       || center.X > Map[Map.Width - 1, 0].Coords.X + Defines.TileSize
-                       || center.Y < Map[0, 0].Coords.Y
-                       || center.Y > Map[0, Map.Height - 1].Coords.Y + Defines.TileSize)
-                    {
-                        Position = (Position + new Position_t(Map.Width, Map.Height) + Directions.Table[dir])
-                                    % new Vector2i(Map.Width, Map.Height);
-                        Coords = Map[Position].Coords + currentTile.Coords - Coords;
-                    }
-                    else if(center.X < currentTile.Coords.X
-                            || center.X > currentTile.Coords.X + Defines.TileSize
-                            || center.Y < currentTile.Coords.Y
-                            || center.Y > currentTile.Coords.Y + Defines.TileSize)
-                    {
-                        Position += Directions.Table[dir];
-                    }
-                }
-                // if about to hit wall, well, don't
-                else if((Map[Position + Directions.Table[dir]].Content == TileContent.Wall
-                         || Map[Position + Directions.Table[dir]].Content == TileContent.GhosthouseDoor)
-                        && Coords.X + Directions.Table[dir].X >= currentTile.Coords.X - 0.5
-                        && Coords.X + Directions.Table[dir].X <= currentTile.Coords.X + 0.5
-                        && Coords.Y + Directions.Table[dir].Y >= currentTile.Coords.Y - 0.5
-                        && Coords.Y + Directions.Table[dir].Y <= currentTile.Coords.Y + 0.5)
-                {
-                    Coords = currentTile.Coords;
-                    MoveDirection = Direction.None;
-                }
-                // otherwise just go
-                else
-                {
-                    Coords += Directions.Table[dir];
-                    var center = Coords + new Coords_t(Defines.TileSize / 2);
-                    if(center.X < currentTile.Coords.X
-                       || center.X > currentTile.Coords.X + Defines.TileSize
-                       || center.Y < currentTile.Coords.Y
-                       || center.Y > currentTile.Coords.Y + Defines.TileSize)
-                    {
-                        Position += Directions.Table[dir];
-                    }
-                }
-
-                var previousTile = currentTile;
-                currentTile = Map[Position];
-                if(previousTile == currentTile)
-                    continue;
-
-                if(currentTile.Content == TileContent.Dot)
-                {
-                    Score += 10;
-                    Map.Timer.Restart();
-                    Map.Counter++;
-                }
-                else if(currentTile.Content == TileContent.SuperDot)
-                {
-                    Score += 50;
-                    Map.Timer.Restart();
-                    Map.Counter++;
-                    IsOnDrugs = true;
-                    ghostEatenMultiplier = 0;
-
-                    Map.Blinky.Mode = GhostMode.Frightened;
-                    Map.Pinky.Mode = GhostMode.Frightened;
-                    Map.Inky.Mode = GhostMode.Frightened;
-                    Map.Clyde.Mode = GhostMode.Frightened;
-
-                    Timer.Restart();
-                }
-
-                previousTile.SetPacman(false);
-                currentTile.SetPacman(true);
-
-                CheckGhosts(currentTile);
+                Move(1.0);
                 if(IsDead)
-                {
-                    Sprite.Position = Coords;
-                    Lives--;
                     return;
-                }
             }
-            CheckGhosts(Map[Position]);
+            Move(distance);
             Sprite.Position = Coords;
-            if(IsDead)
-            {
-                Sprite.Position = Coords;
-                Lives--;
-                return;
-            }
         }
         private void CheckGhosts(Tile currentTile)
         {

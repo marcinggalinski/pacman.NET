@@ -77,7 +77,7 @@
             "lastLevel" : 1,
             "pacmanSpeed" : {
                 "normal" : 0.8,
-                "IsOnDrugs" : 0.9
+                "onDrugs" : 0.9
             },
             "ghostSpeed" : {
                 "normal" : 0.75,

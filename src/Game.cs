@@ -93,11 +93,11 @@ namespace Pacman
 
                 Window.Clear();
 
-                Player.Move();
-                Blinky.Move();
-                Pinky.Move();
-                Inky.Move();
-                Clyde.Move();
+                Player.Move(dt);
+                Blinky.Move(dt);
+                Pinky.Move(dt);
+                Inky.Move(dt);
+                Clyde.Move(dt);
 
                 Hud.Draw(Window, level);
                 Map.Draw(Window);
