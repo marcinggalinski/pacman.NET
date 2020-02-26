@@ -21,7 +21,7 @@ namespace Pacman.Entities
             Score.Font = Font;
             Score.FillColor = Color.White;
             Score.CharacterSize = charSize;
-            Score.Position = new Vector2f(Config.Defines.SideMargin, Config.Defines.TopMargin);
+            Score.Position = new Vector2f(Config.Defines.SideMargin, Config.Defines.TopMargin );
 
             Level.Font = Font;
             Level.FillColor = Color.White;
@@ -43,7 +43,7 @@ namespace Pacman.Entities
                 livesString.Append("<3");
             Lives.DisplayedString = livesString.ToString();
             Lives.Position = new Vector2f(Config.Settings.Resolution.Width - Config.Defines.SideMargin - Lives.GetLocalBounds().Width - Lives.CharacterSize / 3,
-                                          (Config.Defines.HudMargin - Lives.GetLocalBounds().Height) / 2);
+                                          Config.Defines.TopMargin + (Config.Defines.HudMargin - Lives.GetLocalBounds().Height) / 2);
 
             window.Draw(Score);
             window.Draw(Level);
