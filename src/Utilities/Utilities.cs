@@ -4,17 +4,6 @@ using SFML.System;
 
 namespace Pacman.Utilities
 {
-    public struct Resolution_t
-    {
-        public uint Width { get; set; }
-        public uint Height { get; set; }
-
-        public override string ToString()
-        {
-            return $"({Width} {Height})";
-        }
-    }
-
     public struct Position_t
     {
         public int Column { get; set; }

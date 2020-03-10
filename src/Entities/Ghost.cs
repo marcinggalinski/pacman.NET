@@ -85,16 +85,16 @@ namespace Pacman.Entities
             Sprites = new GhostSprites();
             Sprites.Normal = new Sprite(textures.Normal);
             Sprites.Normal.Scale = new Vector2f(
-                (float)Defines.TileSize / textures.Normal.Size.X,
-                (float)Defines.TileSize / textures.Normal.Size.Y);
+                Defines.TileSize / textures.Normal.Size.X,
+                Defines.TileSize / textures.Normal.Size.Y);
             Sprites.Frightened = new Sprite(textures.Frightened);
             Sprites.Frightened.Scale = new Vector2f(
-                (float)Defines.TileSize / textures.Frightened.Size.X,
-                (float)Defines.TileSize / textures.Frightened.Size.Y);
+                Defines.TileSize / textures.Frightened.Size.X,
+                Defines.TileSize / textures.Frightened.Size.Y);
             Sprites.Dead = new Sprite(textures.Dead);
             Sprites.Dead.Scale = new Vector2f(
-                (float)Defines.TileSize / textures.Dead.Size.X,
-                (float)Defines.TileSize / textures.Dead.Size.Y);
+                Defines.TileSize / textures.Dead.Size.X,
+                Defines.TileSize / textures.Dead.Size.Y);
             Sprite = Sprites.Normal;
 
             WasDead = false;

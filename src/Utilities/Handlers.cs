@@ -13,6 +13,26 @@ namespace Pacman.Utilities
         {
             ((RenderWindow)sender).Close();
         }
+        private static void OnKeyPress(object sender, KeyEventArgs e)
+        {
+            switch(e.Code)
+            {
+            case Keyboard.Key.Escape:
+                ((RenderWindow)sender).Close();
+                break;
+            case Keyboard.Key.Down:
+                Menu.ActiveEntry++;
+                break;
+            case Keyboard.Key.Up:
+                Menu.ActiveEntry--;
+                break;
+            case Keyboard.Key.Enter:
+                Menu.ExecuteEntry((RenderWindow)sender);
+                break;
+            default:
+                break;
+            }
+        }
         private static void OnKeyPress(object sender, KeyEventArgs e, Player player)
         {
             switch(e.Code)
@@ -44,6 +64,12 @@ namespace Pacman.Utilities
         {
             window.Closed += OnClose;
             window.KeyPressed += (sender, e) => OnKeyPress(sender, e, player);
+        }
+
+        public static void SetupMenuEvents(RenderWindow window)
+        {
+            window.Closed += OnClose;
+            window.KeyPressed += OnKeyPress;
         }
     }
 }

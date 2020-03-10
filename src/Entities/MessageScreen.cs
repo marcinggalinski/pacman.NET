@@ -6,7 +6,7 @@ namespace Pacman.Entities
 {
     public static class MessageScreen
     {
-        public static void Draw(RenderWindow window,string message)
+        public static void Draw(RenderWindow window, string message)
         {
             var background = new RectangleShape(new Vector2f(Settings.Resolution.Width,
                                                              Settings.Resolution.Height));

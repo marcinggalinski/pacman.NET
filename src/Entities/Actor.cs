@@ -36,7 +36,6 @@ namespace Pacman.Entities
         public void Draw(RenderWindow window)
         {
             window.Draw(Sprite);
-            // Console.WriteLine("{0} position {1}", this.GetType(), Position);
         }
 
         // private methods

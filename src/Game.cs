@@ -28,17 +28,13 @@ namespace Pacman
         private static uint level = 1;
 
         // methods
-        public static void Initialize()
+        public static void Initialize(RenderWindow window)
         {
-            Settings.Load();
             Textures.Load();
             MapData.Load();
 
-            Window = new RenderWindow(
-                new VideoMode(Settings.Resolution.Width, Settings.Resolution.Height),
-                "Pacman.NET");
-            Window.SetActive(false);
-            
+            Window = window;
+
             Map = new Map();
             Player = new Player(Map, 3);
             Blinky = new Blinky(Map);
@@ -146,9 +142,9 @@ namespace Pacman
             }
         }
 
-        public static void Main()
+        public static void Start(RenderWindow window)
         {
-            Initialize();
+            Initialize(window);
 
             DisplayMessage($"Level {level}", 1000);
 

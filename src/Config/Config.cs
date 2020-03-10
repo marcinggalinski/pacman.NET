@@ -9,7 +9,7 @@ namespace Pacman.Config
 {
     public static class Settings
     {
-        public static Resolution_t Resolution;
+        public static (uint Width, uint Height) Resolution;
         public static bool Fullscreen { get; set; }
         public static float MaxFPS { get; set; }
 

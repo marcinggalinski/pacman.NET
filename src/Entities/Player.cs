@@ -32,8 +32,8 @@ namespace Pacman.Entities
         {
             Sprite = new Sprite(Textures.Pacman);
             Sprite.Scale = new Vector2f(
-                (float)Defines.TileSize / Textures.Pacman.Size.X,
-                (float)Defines.TileSize / Textures.Pacman.Size.Y);
+                Defines.TileSize / Textures.Pacman.Size.X,
+                Defines.TileSize / Textures.Pacman.Size.Y);
             Sprite.Position = Coords;
             Score = 0;
             Lives = lives;
