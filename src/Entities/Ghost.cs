@@ -126,7 +126,6 @@ namespace Pacman.Entities
             try
             {
                 // if it is, turn
-                /*
                 if(!Map[Position + dirV].IsWall()
                    && dirV == -mDirV)
                 {
@@ -134,7 +133,6 @@ namespace Pacman.Entities
                     ChangedTile = false;
                     return;
                 }
-                */
                 if((!Map[Position + dirV].IsWall()
                    || (Map[Position + dirV].Content == TileContent.GhosthouseDoor
                        && (Map[Position].Content == TileContent.Ghosthouse
@@ -470,6 +468,28 @@ namespace Pacman.Entities
                 return PlannedTurn;
             
             Tile currentTile = Map[Position];
+
+            bool oneWayIn = true;
+            for(int dir = 0; dir < (int)Direction.NOfDirections; dir++)
+            {
+                if((Direction)dir == Direction.None)
+                    continue;
+                try
+                {
+                    if(!Map[Position + Directions.Table[dir]].IsWall()
+                       && Directions.Table[dir] != -Directions.Table[(int)MoveDirection])
+                       oneWayIn = false;
+                }
+                catch(InvalidTilePositionException)
+                {
+                    //
+                }
+            }
+
+            if(oneWayIn)
+                for(int dir = 0; dir < (int)Direction.NOfDirections; dir++)
+                    if(Directions.Table[dir] == -Directions.Table[(int)MoveDirection])
+                        return (Direction)dir;
 
             if(Mode == GhostMode.Frightened)
             {                
