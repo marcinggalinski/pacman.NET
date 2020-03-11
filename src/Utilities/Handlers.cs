@@ -56,6 +56,9 @@ namespace Pacman.Utilities
                 if(!BlockGameEvents)
                     player.Turn(Direction.Right);
                 break;
+            case Keyboard.Key.Space:
+                Game.IsPaused = !Game.IsPaused;
+                break;
             default:
                 break;
             }

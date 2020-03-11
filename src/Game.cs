@@ -25,11 +25,18 @@ namespace Pacman
         private static Clock Clock { get; set; } = new Clock();
         private static Stopwatch MessageTimer { get; set; } = new Stopwatch();
 
-        private static uint level = 1;
+        private static uint level;
+        private static bool ended;
+
+        public static bool IsPaused;
 
         // methods
         public static void Initialize(RenderWindow window)
         {
+            level = 1;
+            ended = false;
+            IsPaused = false;
+
             Textures.Load();
             MapData.Load();
 
@@ -80,12 +87,15 @@ namespace Pacman
             var dt = new Time();
             Clock.Restart();
             
-            while(Window.IsOpen)
+            while(!ended && Window.IsOpen)
             {
                 WindowMutex.WaitOne();
 
                 currentTime = Clock.ElapsedTime;
                 dt = currentTime - previousTime;
+
+                if(IsPaused)
+                    Pause();
 
                 Window.Clear();
 
@@ -123,7 +133,7 @@ namespace Pacman
                     else
                     {
                         DisplayMessage("GAME OVER", 1000);
-                        Window.Close();
+                        ended = true;
                     }
                 }
                 
@@ -151,7 +161,7 @@ namespace Pacman
             var GameLoopThread = new Thread(new ThreadStart(GameLoop));
             GameLoopThread.Start();
 
-            while(Window.IsOpen)
+            while(!ended && Window.IsOpen)
             {
                 WindowMutex.WaitOne();
 
@@ -164,6 +174,28 @@ namespace Pacman
             }
 
             GameLoopThread.Join();
+        }
+        public static void Pause()
+        {
+            Window.Clear();
+
+            Hud.Draw(Window, level);
+            Map.Draw(Window);
+            Player.Draw(Window);
+            Blinky.Draw(Window);
+            Pinky.Draw(Window);
+            Inky.Draw(Window);
+            Clyde.Draw(Window);
+            MessageScreen.Draw(Window, "paused");
+
+            Window.Display();
+
+            Handlers.BlockGameEvents = true;
+
+            while(IsPaused && Window.IsOpen)
+                Window.DispatchEvents();
+            
+            Handlers.BlockGameEvents = false;
         }
     }
 }
