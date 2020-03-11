@@ -24,14 +24,17 @@ namespace Pacman.Entities
 
         static Menu()
         {
+            // initialize Background
             Background = new Sprite(new Texture("textures/bg.png"));
             Background.Scale = new Vector2f(
                 Settings.Resolution.Width / Background.Texture.Size.X,
                 Settings.Resolution.Height / Background.Texture.Size.Y);
+
+            // initialize Entries
             Entries = new MenuEntry[3];
-            Entries[0] = new MenuEntry("Play", Game.Start, Defines.TopMargin);
-            Entries[1] = new MenuEntry("Settings", (window) => throw new System.NotImplementedException(), Defines.TopMargin + Settings.Resolution.Height / 10);
-            Entries[2] = new MenuEntry("Quit", (window) => window.Close(), Defines.TopMargin + Settings.Resolution.Height / 5);
+            Entries[0] = new MenuEntry("Play", Game.Start, Defines.TopMargin + Settings.Resolution.Height / 2);
+            Entries[1] = new MenuEntry("Settings", (window) => throw new System.NotImplementedException(), Defines.TopMargin + Settings.Resolution.Height / 2 + Settings.Resolution.Height / 10);
+            Entries[2] = new MenuEntry("Quit", (window) => window.Close(), Defines.TopMargin + Settings.Resolution.Height / 2 + Settings.Resolution.Height / 5);
             ActiveEntry = 0;
             Entries[ActiveEntry].IsActive = true;
         }

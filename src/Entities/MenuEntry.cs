@@ -10,7 +10,6 @@ namespace Pacman.Entities
     {
         private bool isActive;
 
-        private Font Font { get; set; }
         public Text Text { get; set; }
         public Action<RenderWindow> Chosen { get; private set; }
         public bool IsActive
@@ -25,8 +24,7 @@ namespace Pacman.Entities
 
         public MenuEntry(string text, Action<RenderWindow> onChoose, float y)
         {
-            Font = new Font("fonts/Emulogic.ttf");
-            Text = new Text(text, Font, Settings.Resolution.Height / 10);
+            Text = new Text(text, new Font("fonts/Emulogic.ttf"), Settings.Resolution.Height / 10);
             Text.Position = new Vector2f((Settings.Resolution.Width - Text.GetLocalBounds().Width) / 2, y);
             Text.FillColor = Color.White;
             IsActive = false;

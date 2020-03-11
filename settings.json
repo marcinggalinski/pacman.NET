@@ -5,5 +5,5 @@
     },
     "fullscreen" : false,
     "maxFPS" : 144,
-    "map" : "default"
+    "map" : "google"
 }
