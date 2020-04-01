@@ -1,3 +1,4 @@
+using System.Runtime.InteropServices;
 using Pacman.Config;
 using Pacman.Entities;
 using Pacman.Utilities;
@@ -6,11 +7,17 @@ using SFML.Window;
 
 namespace Pacman
 {
+
     public static class Program
     {
+
+        [DllImport("X11")]
+        extern public static int XInitThreads();
+
         public static void Main()
         {
             System.Console.WriteLine("Starting...");
+            XInitThreads();
             Settings.Load();
 
             RenderWindow window = new RenderWindow(

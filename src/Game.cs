@@ -24,17 +24,18 @@ namespace Pacman
         private static Clyde Clyde { get; set; }
         private static Clock Clock { get; set; } = new Clock();
         private static Stopwatch MessageTimer { get; set; } = new Stopwatch();
+        public static bool IsPaused { get; set; } = false;
+        public static bool QuitGameScreen { get; set; } = false;
+        public static bool Ended { get; set; } = false;
 
         private static uint level;
-        private static bool ended;
 
-        public static bool IsPaused;
 
         // methods
         public static void Initialize(RenderWindow window)
         {
             level = 1;
-            ended = false;
+            Ended = false;
             IsPaused = false;
 
             Textures.Load();
@@ -87,23 +88,23 @@ namespace Pacman
             var dt = new Time();
             Clock.Restart();
             
-            while(!ended && Window.IsOpen)
+            while(!Ended && Window.IsOpen)
             {
                 WindowMutex.WaitOne();
 
                 currentTime = Clock.ElapsedTime;
                 dt = currentTime - previousTime;
 
-                if(IsPaused)
-                    Pause();
-
                 Window.Clear();
 
-                Player.Move(dt);
-                Blinky.Move(dt);
-                Pinky.Move(dt);
-                Inky.Move(dt);
-                Clyde.Move(dt);
+                if(!IsPaused)
+                {
+                    Player.Move(dt);
+                    Blinky.Move(dt);
+                    Pinky.Move(dt);
+                    Inky.Move(dt);
+                    Clyde.Move(dt);
+                }
 
                 Hud.Draw(Window, level);
                 Map.Draw(Window);
@@ -112,6 +113,11 @@ namespace Pacman
                 Pinky.Draw(Window);
                 Inky.Draw(Window);
                 Clyde.Draw(Window);
+
+                if(QuitGameScreen)
+                    MessageScreen.Draw(Window, "Are You sure You want to quit?", "y/n");
+                else if(IsPaused)
+                    MessageScreen.Draw(Window, "Paused");
                 
                 Window.Display();
 
@@ -133,7 +139,7 @@ namespace Pacman
                     else
                     {
                         DisplayMessage("GAME OVER", 1000);
-                        ended = true;
+                        Ended = true;
                     }
                 }
                 
@@ -154,6 +160,7 @@ namespace Pacman
 
         public static void Start(RenderWindow window)
         {
+            Handlers.BlockMenuEvents = true;
             Initialize(window);
 
             DisplayMessage($"Level {level}", 1000);
@@ -161,7 +168,7 @@ namespace Pacman
             var GameLoopThread = new Thread(new ThreadStart(GameLoop));
             GameLoopThread.Start();
 
-            while(!ended && Window.IsOpen)
+            while(!Ended && Window.IsOpen)
             {
                 WindowMutex.WaitOne();
 
@@ -174,28 +181,7 @@ namespace Pacman
             }
 
             GameLoopThread.Join();
-        }
-        public static void Pause()
-        {
-            Window.Clear();
-
-            Hud.Draw(Window, level);
-            Map.Draw(Window);
-            Player.Draw(Window);
-            Blinky.Draw(Window);
-            Pinky.Draw(Window);
-            Inky.Draw(Window);
-            Clyde.Draw(Window);
-            MessageScreen.Draw(Window, "paused");
-
-            Window.Display();
-
-            Handlers.BlockGameEvents = true;
-
-            while(IsPaused && Window.IsOpen)
-                Window.DispatchEvents();
-            
-            Handlers.BlockGameEvents = false;
+            Handlers.BlockMenuEvents = false;
         }
     }
 }
