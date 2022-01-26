@@ -9,11 +9,7 @@ public static class Game
 
     public static void Main()
     {
-        Window.Closed += (sender, args) =>
-        {
-            var window = sender as RenderWindow;
-            window!.Close();
-        };
+        RenderWindowEventHandler.RegisterHandler(Window);
         
         while (Window.IsOpen)
         {
