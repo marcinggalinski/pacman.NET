@@ -1,11 +1,12 @@
 ﻿using pacman.NET.Config;
+using System;
 
 namespace pacman.NET.Types;
 
 public struct Position
 {
-    public uint Column { get; set; }
-    public uint Row { get; set; }
+    public int Column { get; set; }
+    public int Row { get; set; }
 
     public float X => (Column - 1) * Constants.TileSize + Constants.TileSize / 2;
     public float Y => (Row - 1) * Constants.TileSize + Constants.TileSize / 2;
@@ -14,7 +15,7 @@ public struct Position
     public Position() : this(0, 0)
     { }
 
-    public Position(uint column, uint row)
+    public Position(int column, int row)
     {
         Column = column;
         Row = row;
