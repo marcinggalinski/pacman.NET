@@ -1,9 +1,0 @@
-{
-    "resolution" : {
-        "width" : 800,
-        "height" : 600
-    },
-    "fullscreen" : false,
-    "maxFPS" : 144,
-    "map" : "google"
-}
