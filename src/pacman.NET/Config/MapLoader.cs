@@ -25,11 +25,11 @@ public static class MapLoader
                 var position = new Position(column, row);
                 tiles[column, row] = mapData.Layout[row][column] switch
                 {
-                    ' ' => new Tile(position, TileType.Empty),
-                    '.' => new Tile(position, TileType.Empty),
-                    '*' => new Tile(position, TileType.Empty),
-                    '#' => new Tile(position, TileType.Wall),
-                    'd' => new Tile(position, TileType.GhostHouseDoor),
+                    ' ' => new Tile(position, TileType.Accessible, TileContent.None),
+                    '.' => new Tile(position, TileType.Accessible, TileContent.Dot),
+                    '*' => new Tile(position, TileType.Accessible, TileContent.SuperDot),
+                    '#' => new Tile(position, TileType.Wall, TileContent.None),
+                    'd' => new Tile(position, TileType.GhostHouseDoor, TileContent.None),
                     _ => throw new ArgumentOutOfRangeException($"{mapData.Layout[row][column]}")
                 };
             }
