@@ -6,7 +6,7 @@ namespace pacman.NET;
 
 public static class Game
 {
-    private static readonly RenderWindow Window = new RenderWindow(new VideoMode(800, 600), "Pacman.NET");
+    private static readonly RenderWindow Window = new RenderWindow(new VideoMode(Globals.WindowWidth, Globals.WindowHeight), "Pacman.NET");
 
     public static void Main()
     {

@@ -19,10 +19,10 @@ public class Tile : Drawable
         
         _vertices = new []
         {
-            new Vertex(new Vector2f(Position.X - Constants.TileSize / 2, Position.Y - Constants.TileSize / 2)),
-            new Vertex(new Vector2f(Position.X + Constants.TileSize / 2, Position.Y - Constants.TileSize / 2)),
-            new Vertex(new Vector2f(Position.X + Constants.TileSize / 2, Position.Y + Constants.TileSize / 2)),
-            new Vertex(new Vector2f(Position.X - Constants.TileSize / 2, Position.Y + Constants.TileSize / 2))
+            new Vertex(new Vector2f(Position.X - Globals.TileSize / 2 + 1, Position.Y - Globals.TileSize / 2 + 1)),
+            new Vertex(new Vector2f(Position.X + Globals.TileSize / 2 - 1, Position.Y - Globals.TileSize / 2 + 1)),
+            new Vertex(new Vector2f(Position.X + Globals.TileSize / 2 - 1, Position.Y + Globals.TileSize / 2 - 1)),
+            new Vertex(new Vector2f(Position.X - Globals.TileSize / 2 + 1, Position.Y + Globals.TileSize / 2 - 1))
         };
     }
 

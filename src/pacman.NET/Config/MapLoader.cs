@@ -3,7 +3,6 @@ using pacman.NET.Types;
 using System;
 using System.IO;
 using System.Text.Json;
-using System.Text.Json.Serialization;
 
 namespace pacman.NET.Config;
 
@@ -15,8 +14,10 @@ public static class MapLoader
         {
             PropertyNamingPolicy = JsonNamingPolicy.CamelCase
         })!;
+        
+        SetGlobals(mapData);
+        
         var tiles = new Tile[mapData.Width, mapData.Height];
-
         for (var row = 0; row < mapData.Height; row++)
         {
             for (var column = 0; column < mapData.Width; column++)
@@ -35,5 +36,22 @@ public static class MapLoader
         }
 
         return new Map(tiles);
+    }
+
+    private static void SetGlobals(MapData mapData)
+    {
+        var tileSizeFromWidth = (float)Globals.WindowWidth / mapData.Width;
+        var tileSizeFromHeight = (float)Globals.WindowHeight / mapData.Height;
+
+        if (tileSizeFromWidth < tileSizeFromHeight)
+        {
+            Globals.TileSize = tileSizeFromWidth;
+            Globals.TopMargin = (Globals.WindowHeight - mapData.Height * tileSizeFromWidth) / 2f;
+        }
+        else
+        {
+            Globals.TileSize = tileSizeFromHeight;
+            Globals.LeftMargin = (Globals.WindowWidth - mapData.Width * tileSizeFromHeight) / 2f;
+        }
     }
 }
