@@ -7,9 +7,12 @@ public static class Globals
     public static uint WindowWidth { get; set; } = 800;
     public static uint WindowHeight { get; set; } = 600;
     
-    public static float TileSize { get; set; }
-    public static float TopMargin { get; set; }
-    public static float LeftMargin { get; set; }
+    public static uint TileSize { get; set; }
+    public static uint HalfTileSize => TileSize / 2;
+    public static uint TopMargin { get; set; }
+    public static uint LeftMargin { get; set; }
+    
+    public static float MoveUnit { get; set; }
 
     public static class Textures
     {

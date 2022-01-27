@@ -22,8 +22,8 @@ public struct Position
     public float X { get; set; }
     public float Y { get; set; }
 
-    public uint Column => (uint)Math.Round((X - Globals.LeftMargin - Globals.TileSize / 2) / Globals.TileSize);
-    public uint Row => (uint)Math.Round((Y - Globals.TopMargin - Globals.TileSize / 2) / Globals.TileSize);
+    public uint Column => (uint)Math.Round((X - Globals.LeftMargin - Globals.HalfTileSize) / Globals.TileSize);
+    public uint Row => (uint)Math.Round((Y - Globals.TopMargin - Globals.HalfTileSize) / Globals.TileSize);
 
 
     public bool Equals(Position position, EqualityType type)
@@ -31,7 +31,7 @@ public struct Position
         return type switch
         {
             EqualityType.RowColumnBased => Row == position.Row && Column == position.Column,
-            EqualityType.XYBased => Math.Abs(X - position.X) < float.Epsilon && Math.Abs(Y - position.Y) < float.Epsilon,
+            EqualityType.XYBased => Math.Abs(X - position.X) < Globals.MoveUnit && Math.Abs(Y - position.Y) < Globals.MoveUnit,
             _ => throw new ArgumentOutOfRangeException(nameof(type), type, null)
         };
     }

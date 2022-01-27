@@ -11,10 +11,10 @@ public class Tile : ModelBase
     public TileContent TileContent { get; }
     
     public Rectangle Rectangle => new Rectangle(
-        new Vector2f(Position.X - Globals.TileSize / 2, Position.Y - Globals.TileSize / 2),
-        new Vector2f(Position.X + Globals.TileSize / 2, Position.Y - Globals.TileSize / 2),
-        new Vector2f(Position.X + Globals.TileSize / 2, Position.Y + Globals.TileSize / 2),
-        new Vector2f(Position.X - Globals.TileSize / 2, Position.Y + Globals.TileSize / 2));
+        new Vector2f(Position.X - Globals.HalfTileSize, Position.Y - Globals.HalfTileSize),
+        new Vector2f(Position.X + Globals.HalfTileSize, Position.Y - Globals.HalfTileSize),
+        new Vector2f(Position.X + Globals.HalfTileSize, Position.Y + Globals.HalfTileSize),
+        new Vector2f(Position.X - Globals.HalfTileSize, Position.Y + Globals.HalfTileSize));
 
     public Tile(Position position, TileType tileType, TileContent tileContent)
     {
@@ -39,7 +39,7 @@ public class Tile : ModelBase
             Sprite = new Sprite(texture)
             {
                 Position = Rectangle.TopLeft,
-                Scale = new Vector2f(Globals.TileSize / texture.Size.X, Globals.TileSize / texture.Size.Y)
+                Scale = new Vector2f((float)Globals.TileSize / texture.Size.X, (float)Globals.TileSize / texture.Size.Y)
             };
         }
     }

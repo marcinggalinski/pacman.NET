@@ -15,8 +15,8 @@ public class Pacman : ModelBase
         Position = startPosition;
         Sprite = new Sprite(Globals.Textures.Pacman)
         {
-            Position = new Vector2f(Position.X - Globals.TileSize / 2, Position.Y - Globals.TileSize / 2),
-            Scale = new Vector2f(Globals.TileSize / Globals.Textures.Pacman.Size.X, Globals.TileSize / Globals.Textures.Pacman.Size.Y)
+            Position = new Vector2f(Position.X - Globals.TileSize / 2f, Position.Y - Globals.TileSize / 2f),
+            Scale = new Vector2f((float)Globals.TileSize / Globals.Textures.Pacman.Size.X, (float)Globals.TileSize / Globals.Textures.Pacman.Size.Y)
         };
     }
 
@@ -33,22 +33,23 @@ public class Pacman : ModelBase
 
         var positionChange = MoveDirection switch
         {
-            Direction.Left => new Vector2f(-1f, 0f),
-            Direction.Up => new Vector2f(0f, -1f),
-            Direction.Right => new Vector2f(1f, 0f),
-            Direction.Down => new Vector2f(0f, 1f)
+            Direction.Left => new Vector2f(-Globals.MoveUnit, 0f),
+            Direction.Up => new Vector2f(0f, -Globals.MoveUnit),
+            Direction.Right => new Vector2f(Globals.MoveUnit, 0f),
+            Direction.Down => new Vector2f(0f, Globals.MoveUnit)
         };
         
         var currentTile = map[Position.Column, Position.Row];
-        var nextTile = map[(uint)(Position.Column + positionChange.X), (uint)(Position.Row + positionChange.Y)];
+        var nextTile = map[(uint)(Position.Column + positionChange.X / Globals.MoveUnit), (uint)(Position.Row + positionChange.Y / Globals.MoveUnit)];
         if (Position.Equals(currentTile.Position, EqualityType.XYBased) && nextTile.TileType is not TileType.Accessible)
         {
+            Position = currentTile.Position;
             MoveDirection = Direction.None;
-            return;
         }
-
-        Position = new Position(Position.X + positionChange.X, Position.Y + positionChange.Y);
-        Sprite!.Position = new Vector2f(Position.X - Globals.TileSize / 2, Position.Y - Globals.TileSize / 2);
+        else
+            Position = new Position(Position.X + positionChange.X, Position.Y + positionChange.Y);
+        
+        Sprite!.Position = new Vector2f(Position.X - Globals.HalfTileSize, Position.Y - Globals.HalfTileSize);
     }
 
     private void CheckTurnPossibility(Map map)

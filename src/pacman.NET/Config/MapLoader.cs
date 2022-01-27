@@ -45,15 +45,17 @@ public static class MapLoader
 
         if (tileSizeFromWidth < tileSizeFromHeight)
         {
-            Globals.TileSize = tileSizeFromWidth;
-            Globals.TopMargin = (Globals.WindowHeight - mapData.Height * tileSizeFromWidth) / 2f;
-            Globals.LeftMargin = (Globals.WindowWidth - mapData.Width * tileSizeFromWidth) / 2f;
+            Globals.TileSize = tileSizeFromWidth % 2 == 0 ? tileSizeFromWidth : tileSizeFromWidth - 1;
+            Globals.TopMargin = (Globals.WindowHeight - mapData.Height * Globals.TileSize) / 2;
+            Globals.LeftMargin = (Globals.WindowWidth - mapData.Width * Globals.TileSize) / 2;
         }
         else
         {
-            Globals.TileSize = tileSizeFromHeight;
-            Globals.TopMargin = (Globals.WindowHeight - mapData.Height * tileSizeFromHeight) / 2f;
-            Globals.LeftMargin = (Globals.WindowWidth - mapData.Width * tileSizeFromHeight) / 2f;
+            Globals.TileSize = tileSizeFromHeight % 2 == 0 ? tileSizeFromHeight : tileSizeFromHeight - 1;
+            Globals.TopMargin = (Globals.WindowHeight - mapData.Height * Globals.TileSize) / 2;
+            Globals.LeftMargin = (Globals.WindowWidth - mapData.Width * Globals.TileSize) / 2;
         }
+        
+        Globals.MoveUnit = Globals.TileSize / 20f;
     }
 }
