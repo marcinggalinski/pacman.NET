@@ -56,6 +56,13 @@ public class Pacman : ModelBase
     {
         if (PlannedTurn is Direction.None)
             return;
+
+        if (AreOppositeDirections(MoveDirection, PlannedTurn))
+        {
+            MoveDirection = PlannedTurn;
+            PlannedTurn = Direction.None;
+            return;
+        }
         
         var positionChange = PlannedTurn switch
         {
@@ -72,6 +79,18 @@ public class Pacman : ModelBase
             MoveDirection = PlannedTurn;
             PlannedTurn = Direction.None;
         }
+    }
+
+    private bool AreOppositeDirections(Direction direction1, Direction direction2)
+    {
+        return direction1 switch
+        {
+            Direction.None => false,
+            Direction.Left => direction2 is Direction.Right,
+            Direction.Up => direction2 is Direction.Down,
+            Direction.Right => direction2 is Direction.Left,
+            Direction.Down => direction2 is Direction.Up
+        };
     }
 }
 
