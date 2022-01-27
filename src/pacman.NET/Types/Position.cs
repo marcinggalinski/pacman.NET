@@ -6,34 +6,36 @@ namespace pacman.NET.Types;
 
 public struct Position
 {
-    public int Column { get; set; }
-    public int Row { get; set; }
-
-    public float X => Globals.LeftMargin + Column * Globals.TileSize + Globals.TileSize / 2;
-    public float Y => Globals.TopMargin + Row * Globals.TileSize + Globals.TileSize / 2;
-
-
-    public Position() : this(0, 0)
-    { }
-
-    public Position(int column, int row)
+    public Position(uint column, uint row)
     {
-        Column = column;
-        Row = row;
+        X = Globals.LeftMargin + column * Globals.TileSize + Globals.TileSize / 2;
+        Y = Globals.TopMargin + row * Globals.TileSize + Globals.TileSize / 2;
+    }
+
+    public Position(float x, float y)
+    {
+        X = x;
+        Y = y;
     }
     
-
-    public bool Equals(Position other) => Row == other.Row && Column == other.Column;
     
-    public override bool Equals(object? obj) => obj is Position other && Equals(other);
-    
-    public override int GetHashCode() => HashCode.Combine(Row, Column);
-    
+    public float X { get; set; }
+    public float Y { get; set; }
 
-    public static bool operator ==(Position lhv, Position rhv) => lhv.Row == rhv.Row && lhv.Column == rhv.Column;
+    public uint Column => (uint)Math.Round((X - Globals.LeftMargin - Globals.TileSize / 2) / Globals.TileSize);
+    public uint Row => (uint)Math.Round((Y - Globals.TopMargin - Globals.TileSize / 2) / Globals.TileSize);
 
-    public static bool operator !=(Position lhv, Position rhv) => lhv.Row != rhv.Row || lhv.Column != rhv.Column;
 
-    
+    public bool Equals(Position position, EqualityType type)
+    {
+        return type switch
+        {
+            EqualityType.RowColumnBased => Row == position.Row && Column == position.Column,
+            EqualityType.XYBased => Math.Abs(X - position.X) < float.Epsilon && Math.Abs(Y - position.Y) < float.Epsilon,
+            _ => throw new ArgumentOutOfRangeException(nameof(type), type, null)
+        };
+    }
+
+
     public static implicit operator Vector2f(Position position) => new Vector2f(position.X, position.Y);
 }

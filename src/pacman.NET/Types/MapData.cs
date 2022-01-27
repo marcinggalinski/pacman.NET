@@ -1,4 +1,4 @@
-﻿namespace pacman.NET.Config;
+﻿namespace pacman.NET.Types;
 
 public class MapData
 {

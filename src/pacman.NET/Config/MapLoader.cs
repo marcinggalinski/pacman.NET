@@ -18,19 +18,19 @@ public static class MapLoader
         SetGlobals(mapData);
         
         var tiles = new Tile[mapData.Width, mapData.Height];
-        for (var row = 0; row < mapData.Height; row++)
+        for (uint row = 0; row < mapData.Height; row++)
         {
-            for (var column = 0; column < mapData.Width; column++)
+            for (uint column = 0; column < mapData.Width; column++)
             {
                 var position = new Position(column, row);
-                tiles[column, row] = mapData.Layout[row][column] switch
+                tiles[column, row] = mapData.Layout[row][(int)column] switch
                 {
                     ' ' => new Tile(position, TileType.Accessible, TileContent.None),
                     '.' => new Tile(position, TileType.Accessible, TileContent.Dot),
                     '*' => new Tile(position, TileType.Accessible, TileContent.SuperDot),
                     '#' => new Tile(position, TileType.Wall, TileContent.None),
                     'd' => new Tile(position, TileType.GhostHouseDoor, TileContent.None),
-                    _ => throw new ArgumentOutOfRangeException($"{mapData.Layout[row][column]}")
+                    _ => throw new ArgumentOutOfRangeException($"{mapData.Layout[row][(int)column]}")
                 };
             }
         }
@@ -40,17 +40,19 @@ public static class MapLoader
 
     private static void SetGlobals(MapData mapData)
     {
-        var tileSizeFromWidth = (float)Globals.WindowWidth / mapData.Width;
-        var tileSizeFromHeight = (float)Globals.WindowHeight / mapData.Height;
+        var tileSizeFromWidth = Globals.WindowWidth / mapData.Width;
+        var tileSizeFromHeight = Globals.WindowHeight / mapData.Height;
 
         if (tileSizeFromWidth < tileSizeFromHeight)
         {
             Globals.TileSize = tileSizeFromWidth;
             Globals.TopMargin = (Globals.WindowHeight - mapData.Height * tileSizeFromWidth) / 2f;
+            Globals.LeftMargin = (Globals.WindowWidth - mapData.Width * tileSizeFromWidth) / 2f;
         }
         else
         {
             Globals.TileSize = tileSizeFromHeight;
+            Globals.TopMargin = (Globals.WindowHeight - mapData.Height * tileSizeFromHeight) / 2f;
             Globals.LeftMargin = (Globals.WindowWidth - mapData.Width * tileSizeFromHeight) / 2f;
         }
     }

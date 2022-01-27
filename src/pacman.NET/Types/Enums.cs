@@ -1,6 +1,6 @@
 ﻿namespace pacman.NET.Types;
 
-public enum MoveDirection
+public enum Direction
 {
     None,
     Left,
@@ -22,4 +22,10 @@ public enum TileContent
     None,
     Dot,
     SuperDot
+}
+
+public enum EqualityType
+{
+    RowColumnBased,
+    XYBased
 }
