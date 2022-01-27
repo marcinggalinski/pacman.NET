@@ -44,18 +44,3 @@ public class Tile : ModelBase
         }
     }
 }
-
-public enum TileType
-{
-    Accessible,
-    Inaccessible,
-    Wall,
-    GhostHouseDoor
-}
-
-public enum TileContent
-{
-    None,
-    Dot,
-    SuperDot
-}

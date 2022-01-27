@@ -19,5 +19,7 @@ public static class Globals
             public static Texture Dot { get; set; } = null!;
             public static Texture SuperDot { get; set; } = null!;
         }
+
+        public static Texture Pacman = null!;
     }
 }

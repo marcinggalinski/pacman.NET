@@ -1,4 +1,5 @@
 ﻿using pacman.NET.Config;
+using SFML.System;
 using System;
 
 namespace pacman.NET.Types;
@@ -29,13 +30,10 @@ public struct Position
     public override int GetHashCode() => HashCode.Combine(Row, Column);
     
 
-    public static bool operator ==(Position lhv, Position rhv)
-    {
-        return lhv.Row == rhv.Row && lhv.Column == rhv.Column;
-    }
+    public static bool operator ==(Position lhv, Position rhv) => lhv.Row == rhv.Row && lhv.Column == rhv.Column;
 
-    public static bool operator !=(Position lhv, Position rhv)
-    {
-        return lhv.Row != rhv.Row || lhv.Column != rhv.Column;
-    }
+    public static bool operator !=(Position lhv, Position rhv) => lhv.Row != rhv.Row || lhv.Column != rhv.Column;
+
+    
+    public static implicit operator Vector2f(Position position) => new Vector2f(position.X, position.Y);
 }

@@ -1,5 +1,6 @@
 ﻿using pacman.NET.Config;
 using pacman.NET.Models;
+using pacman.NET.Types;
 using SFML.Graphics;
 using SFML.Window;
 using System.Collections.Generic;
@@ -21,6 +22,8 @@ public static class Game
         foreach (var tile in map)
             Models.Add(tile);
 
+        var pacman = new Pacman(new Position(1, 1));
+
         while (Window.IsOpen)
         {
             Window.Clear();
@@ -28,6 +31,8 @@ public static class Game
             Window.DispatchEvents();
             foreach (var tile in map)
                 tile.Draw(Window, default);
+            
+            pacman.Draw(Window, default);
             
             Window.Display();
         }
