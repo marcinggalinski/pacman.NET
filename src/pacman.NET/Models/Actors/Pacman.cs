@@ -1,12 +1,12 @@
 ﻿using pacman.NET.Config;
-using pacman.NET.Models.Abstract;
+using pacman.NET.Models.Actors.Abstract;
 using pacman.NET.Types;
 using SFML.Graphics;
 using SFML.System;
 
-namespace pacman.NET.Models;
+namespace pacman.NET.Models.Actors;
 
-public class Pacman : ModelBase
+public class Pacman : Actor
 {
     public Direction MoveDirection { get; private set; } = Direction.None;
     public Direction PlannedTurn { get; private set; } = Direction.None;

@@ -1,5 +1,6 @@
 ﻿using pacman.NET.Config;
 using pacman.NET.Models;
+using pacman.NET.Models.Actors;
 using pacman.NET.Types;
 using SFML.Graphics;
 using SFML.Window;

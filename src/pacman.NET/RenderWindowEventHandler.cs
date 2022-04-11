@@ -1,8 +1,7 @@
-﻿using pacman.NET.Models;
+﻿using pacman.NET.Models.Actors;
 using pacman.NET.Types;
 using SFML.Graphics;
 using SFML.Window;
-using System;
 
 namespace pacman.NET;
 
