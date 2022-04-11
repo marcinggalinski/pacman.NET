@@ -1,4 +1,5 @@
 ﻿using pacman.NET.Config;
+using pacman.NET.Models.Abstract;
 using pacman.NET.Types;
 using SFML.Graphics;
 using SFML.System;

@@ -1,7 +1,7 @@
 ﻿using pacman.NET.Types;
 using SFML.Graphics;
 
-namespace pacman.NET.Models;
+namespace pacman.NET.Models.Abstract;
 
 public abstract class ModelBase : Drawable
 {
