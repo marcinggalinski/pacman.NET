@@ -1,8 +1,10 @@
 ﻿using pacman.NET.Config;
 using pacman.NET.Models.Abstract;
+using pacman.NET.Models.Actors.Abstract;
 using pacman.NET.Types;
 using SFML.Graphics;
 using SFML.System;
+using System.Collections.Generic;
 
 namespace pacman.NET.Models;
 
@@ -10,6 +12,7 @@ public class Tile : ModelBase
 {
     public TileType TileType { get; }
     public TileContent TileContent { get; }
+    public List<Actor> ContainedActors { get; set; }
     
     public Rectangle Rectangle => new Rectangle(
         new Vector2f(Position.X - Globals.HalfTileSize, Position.Y - Globals.HalfTileSize),
@@ -43,5 +46,7 @@ public class Tile : ModelBase
                 Scale = new Vector2f((float)Globals.TileSize / texture.Size.X, (float)Globals.TileSize / texture.Size.Y)
             };
         }
+
+        ContainedActors = new List<Actor>();
     }
 }

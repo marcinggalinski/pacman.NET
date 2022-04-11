@@ -1,5 +1,4 @@
 ﻿using pacman.NET.Config;
-using pacman.NET.Models;
 using pacman.NET.Models.Actors;
 using pacman.NET.Types;
 using SFML.Graphics;
@@ -16,7 +15,7 @@ public static class Game
         TextureLoader.LoadTextures();
         
         var map = MapLoader.LoadMap("Default");
-        var pacman = new Pacman(new Position(1, 1));
+        var pacman = new Pacman(map, new Position(1, 1));
         
         RenderWindowEventHandler.RegisterHandlers(Window, pacman);
 
@@ -28,7 +27,7 @@ public static class Game
             foreach (var tile in map)
                 tile.Draw(Window, default);
             
-            pacman.Move(map);
+            pacman.Move();
             pacman.Draw(Window, default);
             
             Window.Display();

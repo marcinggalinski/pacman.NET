@@ -8,11 +8,16 @@ namespace pacman.NET.Models.Actors;
 
 public class Pacman : Actor
 {
+    private Map _map;
+
     public Direction MoveDirection { get; private set; } = Direction.None;
     public Direction PlannedTurn { get; private set; } = Direction.None;
+    public Tile CurrentTile => _map[Position.Column, Position.Row];
 
-    public Pacman(Position startPosition)
+    public Pacman(Map map, Position startPosition)
     {
+        _map = map;
+
         Position = startPosition;
         Sprite = new Sprite(Globals.Textures.Pacman)
         {
@@ -26,9 +31,9 @@ public class Pacman : Actor
         PlannedTurn = direction;
     }
 
-    public void Move(Map map)
+    public void Move()
     {
-        CheckTurnPossibility(map);
+        CheckTurnPossibility();
         if (MoveDirection is Direction.None)
             return;
 
@@ -40,20 +45,23 @@ public class Pacman : Actor
             Direction.Down => new Vector2f(0f, Globals.MoveUnit)
         };
         
-        var currentTile = map[Position.Column, Position.Row];
-        var nextTile = map[(uint)(Position.Column + positionChange.X / Globals.MoveUnit), (uint)(Position.Row + positionChange.Y / Globals.MoveUnit)];
-        if (Position.Equals(currentTile.Position, EqualityType.XYBased) && nextTile.TileType is not TileType.Accessible)
+        CurrentTile.ContainedActors.Remove(this);
+        
+        var nextTile = _map[(uint)(Position.Column + positionChange.X / Globals.MoveUnit), (uint)(Position.Row + positionChange.Y / Globals.MoveUnit)];
+        if (Position.Equals(CurrentTile.Position, EqualityType.XYBased) && nextTile.TileType is not TileType.Accessible)
         {
-            Position = currentTile.Position;
+            Position = CurrentTile.Position;
             MoveDirection = Direction.None;
         }
         else
             Position = new Position(Position.X + positionChange.X, Position.Y + positionChange.Y);
+
+        CurrentTile.ContainedActors.Add(this);
         
         Sprite!.Position = new Vector2f(Position.X - Globals.HalfTileSize, Position.Y - Globals.HalfTileSize);
     }
 
-    private void CheckTurnPossibility(Map map)
+    private void CheckTurnPossibility()
     {
         if (PlannedTurn is Direction.None)
             return;
@@ -73,9 +81,8 @@ public class Pacman : Actor
             Direction.Down => new Vector2i(0, 1)
         };
         
-        var currentTile = map[Position.Column, Position.Row];
-        var nextTile = map[(uint)(Position.Column + positionChange.X), (uint)(Position.Row + positionChange.Y)];
-        if (Position.Equals(currentTile.Position, EqualityType.XYBased) && nextTile.TileType is TileType.Accessible)
+        var nextTile = _map[(uint)(Position.Column + positionChange.X), (uint)(Position.Row + positionChange.Y)];
+        if (Position.Equals(CurrentTile.Position, EqualityType.XYBased) && nextTile.TileType is TileType.Accessible)
         {
             MoveDirection = PlannedTurn;
             PlannedTurn = Direction.None;
